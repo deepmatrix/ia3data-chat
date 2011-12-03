@@ -175,3 +175,22 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 	
 }
 
+
+/* CHAT STYLE */
+
+header {
+	background: #EEE;
+	border: 1px solid #CCC;
+}
+
+#chatwindow, #usersonline, #submit {
+	background: #EEE;
+	border: 1px solid #CCC;
+}
+#chatwindow {
+	float: left;
+	width: 200px;
+	height: 90%;
+}
+
+
