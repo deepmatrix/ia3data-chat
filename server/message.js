@@ -21,7 +21,7 @@ function processMsg(client, msg) {
 			var alterClientname = client.username;
 			client.username = msg.split(' ')[1]; // Erstes Wort nach Leerzeichen
 			console.log('Client hat Name gesetzt: ' + client.username);
-			htmlstr += '<li>' + alterClientname + ' changed name to ' + client.username + '.</li>';
+			htmlstr += '<li>' + getTime() + ' ' + alterClientname + ' changed name to ' + client.username + '.</li>';
 
 		}
 
@@ -29,7 +29,7 @@ function processMsg(client, msg) {
 
 	} else {
 		
-		htmlstr += '<li>' + client.username + ': ' + msg + '</li>';
+		htmlstr += '<li>' + getTime() + ' ' + client.username + ': ' + msg + '</li>';
 
 	}
 
