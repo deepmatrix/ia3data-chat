@@ -25,6 +25,7 @@
 
                 // Parameter
                 var serverurl = 'http://localhost:8000';
+                var clientname = 'Anon';
 
                 /** Objekt dass Serverconnection herstellt und verwaltet */
                 var webSocket = io.connect(serverurl);
@@ -33,8 +34,8 @@
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    var username = prompt("Dein Username?","");
-                    webSocket.send('/name ' + username);
+                    clientname = prompt("Dein Username?","");
+                    webSocket.send('/name ' + clientname);
 
                 });
 

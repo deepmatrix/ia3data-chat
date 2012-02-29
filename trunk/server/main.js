@@ -6,6 +6,7 @@
 // Parameter:
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
+var guestName = 'Anon';
 
 // Variablen:
 /** Messagehistory */
@@ -30,15 +31,24 @@ var message = require('./message');
 /* Client verbindet sich mit Server */
 webSocket.sockets.on('connection', function(client) {
 
+    /** Client verbindet sich neu mit Server */
+    client.username = guestName;
+    console.log(client.username);
     console.log((new Date()) + ' Client hat mit Server connected.');
 
-    var clientname = 'Anon';
+    /** Vergangene Chat-Einträge nachsenden */
+    // TODO: Nur Übergangslösung
+    var htmlstr = '<div style="color: #777;">';
+    htmlstr += log.join('');
+    htmlstr += '</div>';
+    client.emit('message', htmlstr);
+
 
     /** Client sendet Nachricht an den Server */
     client.on('message', function(data) {
 
         /** Eingehende Message verarbeiten */
-        var htmlstr = message.processMsg(data);
+        var htmlstr = message.processMsg(client, data, log);
   
         console.log((new Date()) + " Message: " + htmlstr);
 

@@ -2,25 +2,43 @@
 /* Verarbeitet die eingegangen Nachrichten */
 /*******************************************/
 
-function processMsg(msg) {
+function processMsg(client, msg, log) {
 
-	/** Unnötige Whitespaces entfernen */
-	msg.trim(); /** HTML Tags entfernen, sonst Sicherheitslücke! */
-	msg.replace(/<(?:.|\n)*?>/gm, '');
+	/** HTML String bauen */
+	// Alternativ: JSON Datei zurückgeben. HTML wird dann vom Client "gebaut"
+	var htmlstr = '';
+
+	msg = msg.trim(); /** Whitespaces entfernen */
+	msg = msg.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
 
 	/** Check ob ein Querystring enthalten ist! */
-	if (msg.substring(0, 1) == "/") {
+	if (msg.substring(0, 1) === "/") {
 		// Spezieller Query String!
 		console.log('Query String eingegangen!!!');
 
-		if (msg.substring(0, 5) == "/name") {
-			clientname = msg.split(' ')[1];
-			console.log('Client hat Name gesetzt: ' + clientname);
+		if (msg.substring(0, 5) === "/name") {
+
+			var alterClientname = client.username;
+			client.username = msg.split(' ')[1]; // Erstes Wort nach Leerzeichen
+			console.log('Client hat Name gesetzt: ' + client.username);
+			htmlstr += '<li>' + alterClientname + ' changed name to ' + client.username + '.</li>';
+
+		} else if (msg.substring(0, 4) === "/log") {
+
+			// TODO: Nur Beispiel und Übergangslösung
+			htmlstr += '<div style="color: #777;">';
+			htmlstr += log.join('');
+			htmlstr += '</div>';
 		}
+
+
+
+	} else {
+		
+		htmlstr += '<li>' + client.username + ': ' + msg + '</li>';
+
 	}
 
-	/** HTML String bauen */
-	var htmlstr = '<li>' + clientname + ': ' + msg + '</li>';
 
 	return htmlstr;
 
