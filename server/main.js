@@ -10,11 +10,11 @@ var guestName = 'Gast';
 
 // Variablen:
 /** Messagehistory */
-var log = [];
+var historyArray = [];
 /** Verbundene Clients */
-var clients = [];
+var usersonlineArray = [];
 /** Standardfarben */
-var colors = ['#66D9EF', '#79E225', '#FD971C'];
+var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
 
 console.info(getTime() + ' Node.js Chat START ');
 
@@ -42,12 +42,22 @@ webSocket.sockets.on('connection', function(client) {
     htmlstr += '</div>';
     client.emit('history', htmlstr);
 
+    /** Client sendet seinen Usernamen */
+    client.on('username', function(data) {
+
+        console.log("USERNAME SENT");
+
+        // TODO
+        webSocket.sockets.emit('servermessage', webSocket.sockets.toString());
+
+    });
+
 
     /** Client sendet Nachricht an Server */
     client.on('message', function(data) {
 
         /** Eingehende Message verarbeiten */
-        var htmlstr = message.processMsg(client, data, log);
+        var htmlstr = message.processMsg(client, data, usersonlineArray);
   
         console.log(getTime() + " Message: " + htmlstr);
 

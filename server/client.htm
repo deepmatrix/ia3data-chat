@@ -41,25 +41,34 @@
                 });
 
                 /** Server sendet Nachricht an Client */
-                webSocket.on('message', function(message) {
+                webSocket.on('message', function(data) {
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-                    $('#messages').append(message);
+                    $('#messages').append(data);
 
                 });
 
-                webSocket.on('history', function(history) {
+                /** Server sendet Servermessage an Client */
+                webSocket.on('servermessage', function(data) {
 
-                    // TODO
-                    $('#messages').append(history);
+                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
+                    // Wird dann JSON Datei sein!
+                    $('#messages').append(data);
 
                 });
 
-                webSocket.on('usersonline', function(usersonline) {
+                webSocket.on('history', function(data) {
 
                     // TODO
-                    $('#messages').append(usersonline);
+                    $('#messages').append(data);
+
+                });
+
+                webSocket.on('usersonline', function(data) {
+
+                    // TODO
+                    $('#messages').append(data);
 
                 });
 
