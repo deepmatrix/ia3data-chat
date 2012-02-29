@@ -136,14 +136,14 @@ a {color: #03f;}
 a:hover {color: #69f;}
 
 /* Custom text-selection colors (remove any text shadows: twitter.com/miketaylr/status/12228805301) */
-::-moz-selection{background: #fcd700; color: #fff; text-shadow: none;}
-::selection {background: #fcd700; color: #fff; text-shadow: none;} 
+::-moz-selection{background: #90ffcf; color: #fff; text-shadow: none;}
+::selection {background: #90ffcf; color: #fff; text-shadow: none;} 
 
 /*	j.mp/webkit-tap-highlight-color */
-a:link {-webkit-tap-highlight-color: #fcd700;} 
+a:link {-webkit-tap-highlight-color: #90ffcf;} 
 
-ins {background-color: #fcd700; color: #000; text-decoration: none;}
-mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: bold;}
+ins {background-color: #90ffcf; color: #000; text-decoration: none;}
+mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: bold;}
 
 
 
@@ -178,6 +178,10 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 
 /* CHAT STYLE */
 
+.ueberschrift{
+	margin:0px auto;
+}
+
 .chat {
 	background-color: #CCCCCC;
 	width: 50%;
@@ -187,15 +191,35 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 }
 
 #controls {
-
+	margin:10px;
 }
 
 #history{
-	margin:10px auto 10px auto;
+	margin:20px auto 20px auto;
 	background-color: #FFFFFF;
 	height:200px;
-	width:400px;
+	width:80%;
 	border-style:solid;
 	border-width:1px;
+	overflow:auto;
+	padding:10px;
 }
 
+#textbox{
+	height:50px;
+}
+
+
+/*SPRITE BUTTON*/
+
+a.button_avatar {
+	float:left;
+	background: url(img/Buttons_Chat_chat_to_profile.png) no-repeat 0 0;
+	width: 50px;
+	height: 100px;
+	display: block;
+	text-indent: -9999px;
+	margin:15px;
+}
+
+a.button:hover { background-position: 0 -52px; }
