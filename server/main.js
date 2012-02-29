@@ -9,11 +9,25 @@ var port = 8000; // Server Port
 
 // Variablen:
 /** Messagehistory */
-var historyArray = [];
-/** Verbundene Clients */
+
+/**
+ * Messagehistory Log
+ * @type {Array}
+ */
+var historyArray = []; // TODO: Muss gelegentlich gesäubert werden!
+
+/**
+ * Set mit den Namen aller User die online sind
+ * @type {Object}
+ */
 var usersonlineSet = {};
-/** Standardfarben */
+
+/**
+ * Array mit Farben die Usern zufällig zugewiesen werden
+ * @type {Array}
+ */
 var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
+colorArray = shuffle(colorArray); // Zufallsreihenfolge
 
 console.info(getTime() + ' Node.js Chat START ');
 
@@ -39,6 +53,8 @@ webSocket.sockets.on('connection', function(client) {
     htmlstr += '</div>';
     client.emit('history', htmlstr);
 
+    /** Client Farbe zuweisen */
+    client.farbe = colorArray.shift();
 
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
@@ -131,7 +147,9 @@ webSocket.sockets.on('connection', function(client) {
         var msg = client.username + ' left the chat.';
         webSocket.sockets.emit('servermessage', msg);
 
-        delete usersonlineSet[client.username];
+
+        colorArray.push(client.farbe); // Userfarbe in Array zurückgeben
+        delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen
 
     });
 
@@ -147,4 +165,18 @@ function cleanInput(data) {
     data = data.trim(); /** Whitespaces entfernen */
     data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
     return data;
+}
+
+// http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling
+function shuffle(array) {
+    var tmp, current, top = array.length;
+
+    if(top) while(--top) {
+        current = Math.floor(Math.random() * (top + 1));
+        tmp = array[current];
+        array[current] = array[top];
+        array[top] = tmp;
+    }
+
+    return array;
 }
