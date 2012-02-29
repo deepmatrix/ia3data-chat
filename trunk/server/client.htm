@@ -23,17 +23,31 @@
         <script type="text/javascript">
             $(document).ready(function() {
 
-                var webSocket = io.connect('http://localhost:8000');
+                // Parameter
+                var serverurl = 'http://localhost:8000';
 
+                /** Objekt dass Serverconnection herstellt und verwaltet */
+                var webSocket = io.connect(serverurl);
 
+                /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
                     $('#messages').append('<li>Connected to the server.</li>');
+                    var username = prompt("Dein Username?","");
+                    $('#messages').append('<li>' + username + ' joined the server</li>');
+                    webSocket.send('<li>' + username + ' joined the server</li>');
                 });
 
+                /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(message) {
+
+                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
+                    
                     $('#messages').append('<li>' + message + '</li>');
+
                 });
 
+
+                /** Verbindung zum Server getrennt */
                 webSocket.on('disconnect', function() {
                     $('#messages').append('<li>Disconnected from the server.</li>');
                 });
@@ -43,6 +57,7 @@
                     var message = $('#messageText').val();
                     console.log(message);
                     webSocket.send(message);
+                    $('#messages').append('<li>' + message + '</li>');
                     $('#messageText').val('');
                 });
             });
