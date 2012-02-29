@@ -205,6 +205,10 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	padding:10px;
 }
 
+.row{
+	display:block;
+}
+
 #textbox{
 	height:50px;
 }
