@@ -39,6 +39,13 @@
 
                 });
 
+                webSocket.on('history', function(history) {
+
+                    // TODO
+                    $('#messages').append(history);
+
+                });
+
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(message) {
 
