@@ -15,12 +15,10 @@ var clients = [];
 /** Standardfarben */
 var colors = ['#66D9EF', '#79E225', '#FD971C'];
 
-console.info(new Date() + ' Node.js Chat START');
+console.info('Node.js Chat START' + new Date());
 
 // Module importieren
 var io = require('socket.io').listen(port);
-// var http = require('http');
-// var processing = require('processing');
 
 // Initialisierung
 
@@ -37,10 +35,10 @@ io.sockets.on('connection', function(client) {
     client.on('message', function(data) {
         
         console.log((new Date()) + " Message: " + JSON.stringify(data));
-        
-        client.emit('user disconnected');
-        client.broadcast.emit('user connected');
 
+        log.push(data);
+        
+        client.broadcast.emit('message', JSON.stringify(data));
 
     });
 
