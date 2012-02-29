@@ -10,6 +10,7 @@
             </p>
             <p>
                 <button id="sendButton">Send</button>
+                <button id="userButton">Users online</button>
             </p>
         </div>
         <div>
@@ -39,6 +40,15 @@
 
                 });
 
+                /** Server sendet Nachricht an Client */
+                webSocket.on('message', function(message) {
+
+                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
+                    // Wird dann JSON Datei sein!
+                    $('#messages').append(message);
+
+                });
+
                 webSocket.on('history', function(history) {
 
                     // TODO
@@ -46,13 +56,10 @@
 
                 });
 
-                /** Server sendet Nachricht an Client */
-                webSocket.on('message', function(message) {
+                webSocket.on('usersonline', function(usersonline) {
 
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
-                    
-                    $('#messages').append(message);
+                    // TODO
+                    $('#messages').append(usersonline);
 
                 });
 
@@ -74,6 +81,13 @@
         
                     // Textbox leeren
                     $('#messageText').val('');
+                });
+
+                $('#userButton').bind('click', function() {
+
+                    // Nachricht versenden
+                    webSocket.emit('usersonline', { my: 'data' });
+
                 });
             });
         </script>
