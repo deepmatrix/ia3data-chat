@@ -178,16 +178,13 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 /* CHAT STYLE */
 
-.ueberschrift{
-	margin:0px auto;
-}
-
 .chat {
+
 	background-color: #D3D3D3;
-	width: 50%;
-	margin:0px;
+	width: 300px;
+	margin:auto;
 	border-style:solid;
-	border-width:2px;
+	border-width:1px;
 }
 
 #controls {
@@ -211,6 +208,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 #textbox{
 	height:50px;
+	width:200px;
 	resize: none;
 }
 
@@ -224,7 +222,7 @@ a.button_avatar {
 	height: 50px;
 	display: block;
 	text-indent: -9999px;
-	margin:3px 5px 5px 42px;
+	margin:3px 5px 0px 10px;
 }
 
 a.button_avatar:hover { background-position: 0 -50px; }
