@@ -9,7 +9,8 @@
                 <input type="text" id="messageText"/>
             </p>
             <p>
-                <button id="sendButton">Send</button>
+                <button id="sendButton">Senden</button>
+                <button id="usernameButton">Namen &auml;ndern</button>
                 <button id="userButton">Users online</button>
             </p>
         </div>
@@ -17,6 +18,17 @@
             <ul id="messages">
             </ul>
         </div>
+
+        <style type="text/css">
+            .servermessage {
+                color: blue;
+            }
+
+            .usersonline {
+                color: green;
+            }
+        </style>
+
         <script src="http://localhost:8000/socket.io/socket.io.js"></script>
         <script type="text/javascript"
                 src="http://code.jquery.com/jquery-1.5.2.js"></script>
@@ -35,8 +47,8 @@
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    clientname = prompt("Dein Username?","");
-                    webSocket.send('/name ' + clientname);
+                    username = prompt("Dein Username?","");
+                    webSocket.emit('username', username);
 
                 });
 
@@ -54,7 +66,9 @@
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-                    $('#messages').append(data);
+                    
+                    var msg = '<li class="servermessage">' + data + '</li>'
+                    $('#messages').append(msg);
 
                 });
 
@@ -68,7 +82,8 @@
                 webSocket.on('usersonline', function(data) {
 
                     // TODO
-                    $('#messages').append(data);
+                    var msg = '<span class="usersonline">' + data + '</span>'
+                    $('#messages').append(msg);
 
                 });
 
@@ -85,11 +100,31 @@
                     // Nachricht auslesen
                     var message = $('#messageText').val();
 
-                    // Nachricht versenden
-                    webSocket.send(message);
-        
-                    // Textbox leeren
-                    $('#messageText').val('');
+                    if (message) {
+
+                        // Nachricht versenden
+                        webSocket.send(message);
+            
+                        // Textbox leeren
+                        $('#messageText').val('');
+                    }
+
+                });
+
+                $('#usernameButton').bind('click', function() {
+
+                    // Nachricht auslesen
+                    var username = $('#messageText').val();
+
+                    if (username) {
+                        // Nachricht versenden
+                        webSocket.emit('username', username);
+            
+                        // Textbox leeren
+                        $('#messageText').val('');
+                    }
+
+                    
                 });
 
                 $('#userButton').bind('click', function() {
@@ -98,6 +133,7 @@
                     webSocket.emit('usersonline', { my: 'data' });
 
                 });
+
             });
         </script>
     </body>

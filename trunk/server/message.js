@@ -2,7 +2,7 @@
 /* Verarbeitet die eingegangen Nachrichten */
 /*******************************************/
 
-function processMsg(client, msg, usersonlineArray) {
+function processMsg(client, msg) {
 
 	/** HTML String bauen */
 	// Alternativ: JSON Datei zurückgeben. HTML wird dann vom Client "gebaut"
@@ -14,7 +14,7 @@ function processMsg(client, msg, usersonlineArray) {
 	/** Check ob ein Querystring enthalten ist! */
 	if (msg.substring(0, 1) === "/") {
 		// Spezieller Query String!
-		console.log('Query String eingegangen!!!');
+		console.log('Query String eingegangen!');
 
 		if (msg.substring(0, 5) === "/name") {
 
