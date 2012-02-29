@@ -16,13 +16,14 @@ var clients = [];
 /** Standardfarben */
 var colors = ['#66D9EF', '#79E225', '#FD971C'];
 
-console.info('Node.js Chat START' + new Date());
+console.info(getTime() + ' Node.js Chat START ');
 
 // Module importieren
 var webSocket = require('socket.io').listen(port);
 var message = require('./message');
 
 // Initialisierung
+webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 
 // Server Logik
 
@@ -32,7 +33,7 @@ webSocket.sockets.on('connection', function(client) {
     /** Client verbindet sich neu mit Server */
     client.username = guestName;
     console.log(client.username);
-    console.log((new Date()) + ' Client hat mit Server connected.');
+    console.log(getTime()  + ' Client hat mit Server connected.');
 
     /** Vergangene Chat-Einträge nachsenden */
     // TODO: Nur Übergangslösung
@@ -42,13 +43,13 @@ webSocket.sockets.on('connection', function(client) {
     client.emit('history', htmlstr);
 
 
-    /** Client sendet Nachricht an den Server */
+    /** Client sendet Nachricht an Server */
     client.on('message', function(data) {
 
         /** Eingehende Message verarbeiten */
         var htmlstr = message.processMsg(client, data, log);
   
-        console.log((new Date()) + " Message: " + htmlstr);
+        console.log(getTime() + " Message: " + htmlstr);
 
         /** In Message Log einfügen */
         log.push(htmlstr);
@@ -58,9 +59,19 @@ webSocket.sockets.on('connection', function(client) {
 
     });
 
+    /** Client fragt an welche User online sind */
+    client.on('usersonline', function(data) {
+
+        console.log("USERSONLINE ANFRAGE");
+
+        // TODO
+        webSocket.sockets.emit('usersonline', webSocket.sockets.toString());
+
+    });
+
     /** Client beendet Session*/
     client.on('disconnect', function() {
-        console.log((new Date()) + ' Client disconnected.');
+        console.log(getTime() + ' Client disconnected.');
         console.log(log);
 
         var htmlstr = '<li>' + client.username + ' left the chat.</li>';
@@ -68,3 +79,9 @@ webSocket.sockets.on('connection', function(client) {
     });
 
 });
+
+/** Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt */
+function getTime() {
+    var currentTime = new Date();
+    return '' + currentTime.getHours() + ':' + currentTime.getMinutes();
+}
