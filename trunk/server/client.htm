@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Simple chat o' rama</title>
+        <title>Chat Client DEMO</title>
     </head>
     <body>
         <div>
@@ -31,18 +31,20 @@
 
                 /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
-                    $('#messages').append('<li>Connected to the server.</li>');
+                    
+                    // Username setzen
                     var username = prompt("Dein Username?","");
-                    $('#messages').append('<li>' + username + ' joined the server</li>');
-                    webSocket.send('<li>' + username + ' joined the server</li>');
+                    webSocket.send('/name ' + username);
+
                 });
 
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(message) {
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
+                    // Wird dann JSON Datei sein!
                     
-                    $('#messages').append('<li>' + message + '</li>');
+                    $('#messages').append(message);
 
                 });
 
@@ -52,12 +54,17 @@
                     $('#messages').append('<li>Disconnected from the server.</li>');
                 });
 
+
+                /** Event-Handler: Senden Button gedrückt. BESSER: Enter Button!*/
                 $('#sendButton').bind('click', function() {
 
+                    // Nachricht auslesen
                     var message = $('#messageText').val();
-                    console.log(message);
+
+                    // Nachricht versenden
                     webSocket.send(message);
-                    $('#messages').append('<li>' + message + '</li>');
+        
+                    // Textbox leeren
                     $('#messageText').val('');
                 });
             });
