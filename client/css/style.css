@@ -184,7 +184,9 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	width: 300px;
 	margin:10px auto;
 	border-style:solid;
+	border-color:#878787;
 	border-width:1px;
+	border-radius: 10px;
 }
 
 #controls {
@@ -192,11 +194,12 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 }
 
 #history{
-	margin:20px auto 20px auto;
+	margin:20px auto 10px auto;
 	background-color: #FFFFFF;
 	height:200px;
-	width:80%;
+	width:240px;
 	border-style:solid;
+	border-color:#878787;
 	border-width:1px;
 	overflow:auto;
 	padding:10px;
