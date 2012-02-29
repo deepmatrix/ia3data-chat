@@ -19,7 +19,6 @@ console.info(getTime() + ' Node.js Chat START ');
 
 // Module importieren
 var webSocket = require('socket.io').listen(port);
-var message = require('./message');
 
 // Initialisierung
 webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
@@ -30,31 +29,31 @@ webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 webSocket.sockets.on('connection', function(client) {
 
     /** Client verbindet sich neu mit Server */
-    console.log(getTime()  + ' Client hat mit Server connected.');
+    console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.');
 
     /** HISTORY Vergangene Chat-Einträge nachsenden */
     // TODO: Nur Übergangslösung
     // TODO: Sendet keine Servernachrichten mit.
-    
-    var htmlstr = '<div style="color: #777;">';
+    var htmlstr = '<div style="color: #999;">';
     htmlstr += historyArray.join('');
     htmlstr += '</div>';
     client.emit('history', htmlstr);
+
 
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
 
         var msg; // Servermessage
 
-        if (data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
+        if (!data || data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
             data = 'Gast';
         }
 
-        console.log("USERNAME SENT: " + data);
+        data = cleanInput(data); // Input säubern
+        
+        console.log(getTime() + ' USERNAME GESETZT: ' + data);
 
-        // TODO: In eigene Funktion auslagern
-        data = data.trim(); /** Whitespaces entfernen */
-        data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
+        
 
         // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
 
@@ -64,7 +63,7 @@ webSocket.sockets.on('connection', function(client) {
             var alterUsername = client.username;
             client.username = data;
 
-            msg = alterUsername + ' changed name to ' + client.username;
+            msg = getTime() + ' ' + alterUsername + ' changed name to ' + client.username;
             webSocket.sockets.emit('servermessage', msg);
 
             delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
@@ -76,7 +75,7 @@ webSocket.sockets.on('connection', function(client) {
             client.username = data;
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
-            msg = client.username + ' joined the Chat';
+            msg = getTime() + ' ' + client.username + ' joined the Chat';
             webSocket.sockets.emit('servermessage', msg);
 
         }
@@ -90,22 +89,26 @@ webSocket.sockets.on('connection', function(client) {
         // TODO: Als JSON verschicken
 
         /** Eingehende Message verarbeiten */
-        var htmlstr = message.processMsg(client, data);
+        var msg = '';
+
+        data = cleanInput(data); // Input säubern
+
+        msg += '<li>' + getTime() + ' ' + client.username + ': ' + data + '</li>';
   
-        console.log(getTime() + " Message: " + htmlstr);
+        console.log(getTime() + " Message: " + msg);
 
         /** In Message Log einfügen */
         historyArray.push(htmlstr);
 
         /** Sendet an alle verbundenen Clienten die Nachricht raus */
-        webSocket.sockets.emit('message', htmlstr);
+        webSocket.sockets.emit('message', msg);
 
     });
 
     /** Client fragt an welche User online sind */
     client.on('usersonline', function(data) {
 
-        console.log("USERSONLINE ANFRAGE");
+        console.log(getTime() + ' USERSONLINE ANFRAGE');
 
         // TODO: Als JSON verschicken
         var useronlinelist = '';
@@ -123,7 +126,7 @@ webSocket.sockets.on('connection', function(client) {
 
     /** Client beendet Session*/
     client.on('disconnect', function() {
-        console.log(getTime() + ' Client disconnected.');
+        console.log(getTime() + ' CLIENT ABGEMELDET.');
         
         var msg = client.username + ' left the chat.';
         webSocket.sockets.emit('servermessage', msg);
@@ -138,4 +141,10 @@ webSocket.sockets.on('connection', function(client) {
 function getTime() {
     var currentTime = new Date();
     return '' + currentTime.getHours() + ':' + currentTime.getMinutes();
+}
+
+function cleanInput(data) {
+    data = data.trim(); /** Whitespaces entfernen */
+    data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
+    return data;
 }
