@@ -6,7 +6,7 @@
 // Parameter:
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
-var guestName = 'Anon';
+var guestName = 'Gast';
 
 // Variablen:
 /** Messagehistory */
@@ -23,8 +23,6 @@ var webSocket = require('socket.io').listen(port);
 var message = require('./message');
 
 // Initialisierung
-
-
 
 // Server Logik
 
@@ -64,6 +62,9 @@ webSocket.sockets.on('connection', function(client) {
     client.on('disconnect', function() {
         console.log((new Date()) + ' Client disconnected.');
         console.log(log);
+
+        var htmlstr = '<li>' + client.username + ' left the chat.</li>';
+        webSocket.sockets.emit('message', htmlstr);
     });
 
 });
