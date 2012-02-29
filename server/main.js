@@ -41,7 +41,7 @@ webSocket.sockets.on('connection', function(client) {
     var htmlstr = '<div style="color: #777;">';
     htmlstr += log.join('');
     htmlstr += '</div>';
-    client.emit('message', htmlstr);
+    client.emit('history', htmlstr);
 
 
     /** Client sendet Nachricht an den Server */
