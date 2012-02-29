@@ -178,26 +178,24 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 
 /* CHAT STYLE */
 
-header {
-	background: #EEE;
-	border: 1px solid #CCC;
-}
-
-#chatwindow, #usersonline, #submit {
-	background: #EEE;
-	border: 1px solid #CCC;
-}
-#chatwindow {
-	float: left;
-	width: 200px;
-	height: 90%;
-}
-
 .chat {
 	background-color: #CCCCCC;
 	width: 50%;
+	margin:0px;
+	border-style:solid;
+	border-width:2px;
 }
 
 #controls {
 
 }
+
+#history{
+	margin:10px auto 10px auto;
+	background-color: #FFFFFF;
+	height:200px;
+	width:400px;
+	border-style:solid;
+	border-width:1px;
+}
+
