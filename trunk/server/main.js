@@ -1,30 +1,54 @@
-// Konstanten:
-var port = 8000;
+/***********************************/
+/* Multiuser Chat via Node.js      */
+/* Emanuel Kössel / Simon Heimler  */
+/***********************************/
+
+// Parameter:
+process.title = 'Node.js Chat'; // Prozess-Titel
+var port = 8000; // Server Port
 
 
-// Socket.IO Template (http://socket.io/#how-to-use)
-var app = require('http').createServer(handler),
- io = require('socket.io').listen(app),
- fs = require('fs');
+// Variablen:
+/** Messagehistory */
+var log = [];
+/** Verbundene Clients */
+var clients = [];
+/** Standardfarben */
+var colors = ['#66D9EF', '#79E225', '#FD971C'];
 
-app.listen(port);
 
-function handler (req, res) {
-  fs.readFile(__dirname + '/index.html',
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading index.html');
-    }
+// Module importieren
+// var http = require('http');
+var io = require('socket.io').listen(port);
+// var processing = require('processing');
 
-    res.writeHead(200);
-    res.end(data);
-  });
-}
+// var server = http.createServer(function(req, res) {
+//     // Erstmal nichts zu tun.
+// });
 
-io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+
+// Initialisierung
+// server.listen(port);
+// var socket = io.listen(server);
+
+// Server Logik
+// io.sockets.on('connection', function (socket) {
+//   socket.broadcast.emit('user connected');
+// });
+
+io.sockets.on('connection', function( client ) {
+
+    console.info('Client hat mit Server connected.');
+
+    client.on('message', function(data) {
+        
+        console.log("Message: " + JSON.stringify(data));
+        socket.broadcast(data);
+
+    });
+
+    client.on('disconnect', function() {
+
+    });
+
 });
