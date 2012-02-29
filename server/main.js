@@ -7,7 +7,6 @@
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
 
-
 // Variablen:
 /** Messagehistory */
 var log = [];
@@ -16,39 +15,38 @@ var clients = [];
 /** Standardfarben */
 var colors = ['#66D9EF', '#79E225', '#FD971C'];
 
+console.info(new Date() + ' Node.js Chat START');
 
 // Module importieren
-// var http = require('http');
 var io = require('socket.io').listen(port);
+// var http = require('http');
 // var processing = require('processing');
 
-// var server = http.createServer(function(req, res) {
-//     // Erstmal nichts zu tun.
-// });
-
-
 // Initialisierung
-// server.listen(port);
-// var socket = io.listen(server);
+
+
 
 // Server Logik
-// io.sockets.on('connection', function (socket) {
-//   socket.broadcast.emit('user connected');
-// });
 
-io.sockets.on('connection', function( client ) {
+/* Client verbindet sich mit Server */
+io.sockets.on('connection', function(client) {
 
-    console.info('Client hat mit Server connected.');
+    console.log((new Date()) + ' Client hat mit Server connected.');
 
+    /** Client sendet Nachricht an den Server */
     client.on('message', function(data) {
         
-        console.log("Message: " + JSON.stringify(data));
-        socket.broadcast(data);
+        console.log((new Date()) + " Message: " + JSON.stringify(data));
+        
+        client.emit('user disconnected');
+        client.broadcast.emit('user connected');
+
 
     });
 
+    /** Client beendet Session*/
     client.on('disconnect', function() {
-
+        console.log((new Date()) + ' Client disconnected.');
     });
 
 });
