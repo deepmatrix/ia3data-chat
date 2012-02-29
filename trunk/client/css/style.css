@@ -211,6 +211,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 #textbox{
 	height:50px;
+	resize: none;
 }
 
 
