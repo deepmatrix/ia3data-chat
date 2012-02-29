@@ -18,7 +18,7 @@ var colors = ['#66D9EF', '#79E225', '#FD971C'];
 console.info('Node.js Chat START' + new Date());
 
 // Module importieren
-var io = require('socket.io').listen(port);
+var webSocket = require('socket.io').listen(port);
 
 // Initialisierung
 
@@ -27,7 +27,7 @@ var io = require('socket.io').listen(port);
 // Server Logik
 
 /* Client verbindet sich mit Server */
-io.sockets.on('connection', function(client) {
+webSocket.sockets.on('connection', function(client) {
 
     console.log((new Date()) + ' Client hat mit Server connected.');
 
@@ -37,8 +37,27 @@ io.sockets.on('connection', function(client) {
         console.log((new Date()) + " Message: " + JSON.stringify(data));
 
         log.push(data);
+
+        // TODO: Hier muss die Nachricht verwaltet werden!
+        var msg = data;
+
+        /** Unnötige Whitespaces entfernen */
+        msg.trim();
+        /** HTML Tags entfernen, sonst Sicherheitslücke! */
+        msg.replace(/<(?:.|\n)*?>/gm, '');
+
+        /** Check ob ein Querystring enthalten ist! */
+        if (msg.substring(0, 1) == "/") {
+            // Spezieller Query String!
+            console.log('Query String eingegangen!!!');
+
+        }
         
-        client.broadcast.emit('message', JSON.stringify(data));
+        /** HTML String bauen */
+        var htmlstr = '<li>' + msg + '</li>';
+        
+        /** Sendet an alle verbundenen Clienten die Nachricht raus */
+        webSocket.sockets.emit('message', htmlstr);
 
     });
 
