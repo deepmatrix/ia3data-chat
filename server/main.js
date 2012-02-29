@@ -19,6 +19,7 @@ console.info('Node.js Chat START' + new Date());
 
 // Module importieren
 var webSocket = require('socket.io').listen(port);
+var message = require('./message');
 
 // Initialisierung
 
@@ -31,31 +32,19 @@ webSocket.sockets.on('connection', function(client) {
 
     console.log((new Date()) + ' Client hat mit Server connected.');
 
+    var clientname = 'Anon';
+
     /** Client sendet Nachricht an den Server */
     client.on('message', function(data) {
-        
-        console.log((new Date()) + " Message: " + JSON.stringify(data));
 
-        log.push(data);
+        /** Eingehende Message verarbeiten */
+        var htmlstr = message.processMsg(data);
+  
+        console.log((new Date()) + " Message: " + htmlstr);
 
-        // TODO: Hier muss die Nachricht verwaltet werden!
-        var msg = data;
+        /** In Message Log einfügen */
+        log.push(htmlstr);
 
-        /** Unnötige Whitespaces entfernen */
-        msg.trim();
-        /** HTML Tags entfernen, sonst Sicherheitslücke! */
-        msg.replace(/<(?:.|\n)*?>/gm, '');
-
-        /** Check ob ein Querystring enthalten ist! */
-        if (msg.substring(0, 1) == "/") {
-            // Spezieller Query String!
-            console.log('Query String eingegangen!!!');
-
-        }
-        
-        /** HTML String bauen */
-        var htmlstr = '<li>' + msg + '</li>';
-        
         /** Sendet an alle verbundenen Clienten die Nachricht raus */
         webSocket.sockets.emit('message', htmlstr);
 
@@ -64,6 +53,7 @@ webSocket.sockets.on('connection', function(client) {
     /** Client beendet Session*/
     client.on('disconnect', function() {
         console.log((new Date()) + ' Client disconnected.');
+        console.log(log);
     });
 
 });
