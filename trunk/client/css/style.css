@@ -192,3 +192,12 @@ header {
 	width: 200px;
 	height: 90%;
 }
+
+.chat {
+	background-color: #CCCCCC;
+	width: 50%;
+}
+
+#controls {
+
+}

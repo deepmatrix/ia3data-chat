@@ -44,9 +44,19 @@
 	<div id="history"> History </div>
 	<div id="controls">
 		<!--User Button und Textfeld-Message-->
-
+		<form action="input_button.htm">
+  			<p>
+    		<textarea cols="20" rows="4" name="textfeld"></textarea>
+    		<input type="button" name="Text 1" value="Text 1 anzeigen"
+      		onclick="this.form.textfeld.value='Text 1 und rückwärts seltsam geschrieben ich bin.'">
+    		<input type="button" name="Text 2" value="Text 2 anzeigen"
+      		onclick="this.form.textfeld.value='Ich bin Text 2 - ganz normal'">
+  			</p>
+		</form>
 		<form action="textarea.htm">
-    	<textarea name="message_text" cols="50" rows="10" value="Geben Sie hier Ihre Nachricht ein."></textarea>
+			<p>
+    		<textarea name="message_text" cols="50" rows="10" value="Geben Sie hier Ihre Nachricht ein."></textarea>
+			</p>
 		</form>
 	</div>
 </div>
