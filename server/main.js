@@ -6,13 +6,12 @@
 // Parameter:
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
-var guestName = 'Gast';
 
 // Variablen:
 /** Messagehistory */
 var historyArray = [];
 /** Verbundene Clients */
-var usersonlineArray = [];
+var usersonlineSet = {};
 /** Standardfarben */
 var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
 
@@ -31,24 +30,56 @@ webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 webSocket.sockets.on('connection', function(client) {
 
     /** Client verbindet sich neu mit Server */
-    client.username = guestName;
-    console.log(client.username);
     console.log(getTime()  + ' Client hat mit Server connected.');
 
-    /** Vergangene Chat-Einträge nachsenden */
+    /** HISTORY Vergangene Chat-Einträge nachsenden */
     // TODO: Nur Übergangslösung
+    // TODO: Sendet keine Servernachrichten mit.
+    
     var htmlstr = '<div style="color: #777;">';
-    htmlstr += log.join('');
+    htmlstr += historyArray.join('');
     htmlstr += '</div>';
     client.emit('history', htmlstr);
 
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
 
-        console.log("USERNAME SENT");
+        var msg; // Servermessage
 
-        // TODO
-        webSocket.sockets.emit('servermessage', webSocket.sockets.toString());
+        if (data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
+            data = 'Gast';
+        }
+
+        console.log("USERNAME SENT: " + data);
+
+        // TODO: In eigene Funktion auslagern
+        data = data.trim(); /** Whitespaces entfernen */
+        data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
+
+        // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
+
+        if (client.username) {
+
+            // Hat schon Usernamen (Ändert Namen)
+            var alterUsername = client.username;
+            client.username = data;
+
+            msg = alterUsername + ' changed name to ' + client.username;
+            webSocket.sockets.emit('servermessage', msg);
+
+            delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
+            usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
+
+        } else {
+
+            // Neuer User
+            client.username = data;
+            usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
+
+            msg = client.username + ' joined the Chat';
+            webSocket.sockets.emit('servermessage', msg);
+
+        }
 
     });
 
@@ -56,13 +87,15 @@ webSocket.sockets.on('connection', function(client) {
     /** Client sendet Nachricht an Server */
     client.on('message', function(data) {
 
+        // TODO: Als JSON verschicken
+
         /** Eingehende Message verarbeiten */
-        var htmlstr = message.processMsg(client, data, usersonlineArray);
+        var htmlstr = message.processMsg(client, data);
   
         console.log(getTime() + " Message: " + htmlstr);
 
         /** In Message Log einfügen */
-        log.push(htmlstr);
+        historyArray.push(htmlstr);
 
         /** Sendet an alle verbundenen Clienten die Nachricht raus */
         webSocket.sockets.emit('message', htmlstr);
@@ -74,18 +107,29 @@ webSocket.sockets.on('connection', function(client) {
 
         console.log("USERSONLINE ANFRAGE");
 
-        // TODO
-        webSocket.sockets.emit('usersonline', webSocket.sockets.toString());
+        // TODO: Als JSON verschicken
+        var useronlinelist = '';
+
+        for (var username in usersonlineSet) {
+            useronlinelist += '<li>';
+            useronlinelist += username;
+            useronlinelist += '</li>';
+        }
+
+        /** Nur an den anfragenden Clienten die Onlineliste schicken! */
+        client.emit('usersonline', useronlinelist);
 
     });
 
     /** Client beendet Session*/
     client.on('disconnect', function() {
         console.log(getTime() + ' Client disconnected.');
-        console.log(log);
+        
+        var msg = client.username + ' left the chat.';
+        webSocket.sockets.emit('servermessage', msg);
 
-        var htmlstr = '<li>' + client.username + ' left the chat.</li>';
-        webSocket.sockets.emit('message', htmlstr);
+        delete usersonlineSet[client.username];
+
     });
 
 });
