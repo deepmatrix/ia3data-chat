@@ -2,7 +2,7 @@
 /* Verarbeitet die eingegangen Nachrichten */
 /*******************************************/
 
-function processMsg(client, msg, log) {
+function processMsg(client, msg, usersonlineArray) {
 
 	/** HTML String bauen */
 	// Alternativ: JSON Datei zurückgeben. HTML wird dann vom Client "gebaut"
@@ -23,12 +23,6 @@ function processMsg(client, msg, log) {
 			console.log('Client hat Name gesetzt: ' + client.username);
 			htmlstr += '<li>' + alterClientname + ' changed name to ' + client.username + '.</li>';
 
-		} else if (msg.substring(0, 4) === "/log") {
-
-			// TODO: Nur Beispiel und Übergangslösung
-			htmlstr += '<div style="color: #777;">';
-			htmlstr += log.join('');
-			htmlstr += '</div>';
 		}
 
 
