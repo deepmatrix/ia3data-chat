@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-                $('#chat').lionbars();
+                $('#messages').lionbars();
 
                 // Parameter
                 var serverurl = 'http://localhost:8000';
@@ -13,7 +13,8 @@ $(document).ready(function() {
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    username = prompt("Dein Username?","");
+                    $("#messages").html("Geben Sie Ihren Namen ein.");
+                    username = message;
                     webSocket.emit('username', username);
 
                 });
@@ -23,7 +24,7 @@ $(document).ready(function() {
 
                     var obj = jQuery.parseJSON(data);
 
-                    var html = '<span class="m                                         essage">';
+                    var html = '<span class="message">';
 
                     html += '<span class="zeit">' + obj.zeit + '</span>';
                     html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
