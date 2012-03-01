@@ -97,6 +97,11 @@ webSocket.sockets.on('connection', function(client) {
             webSocket.sockets.emit('servermessage', msg);
             console.log(msg);
 
+            var obj = {
+                time: getTime(),
+                severmsg: data
+            };
+
         }
 
     });
@@ -152,7 +157,7 @@ webSocket.sockets.on('connection', function(client) {
 
     /** Client beendet Session*/
     client.on('disconnect', function() {
-        console.log(getTime() + ' CLIENT ABGEMELDET.');
+        console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
         
         var msg = client.username + ' left the chat.';
         webSocket.sockets.emit('servermessage', msg);

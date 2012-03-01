@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+                $('#chat').lionbars();
+
                 // Parameter
                 var serverurl = 'http://localhost:8000';
                 var clientname = 'Anon';
@@ -26,7 +28,7 @@ $(document).ready(function() {
                     html += '<span class="time">' + obj.time + '</span>';
                     html += '<span class="username" style="color: ' + obj.color + '">' + obj.username + '</span>';
                     html += obj.msg;
-                    
+
                     html += '</span>';
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
@@ -70,8 +72,10 @@ $(document).ready(function() {
                 });
 
 
-                /** Event-Handler: Senden Button gedrückt. BESSER: Enter Button!*/
-                $('#sendButton').bind('click', function() {
+                /** Event-Handler: Enter Button */
+                $('#chat').keypress (function() {
+
+                    // TODO : Enter abfragen: IF
 
                     // Nachricht auslesen
                     var message = $('#messageText').val();
@@ -86,6 +90,7 @@ $(document).ready(function() {
                     }
 
                 });
+
 
                 $('#usernameButton').bind('click', function() {
 
@@ -103,6 +108,8 @@ $(document).ready(function() {
                     
                 });
 
+
+
                 $('#userButton').bind('click', function() {
 
                     // Nachricht versenden
@@ -111,12 +118,3 @@ $(document).ready(function() {
                 });
 
 });
-
-//Funktion zur Abfrage der Entertaste
-function runScript(e) {
-    if (e.keyCode == 13) {
-        var tb = document.getElementById("textbox");
-        eval(tb.value);
-        return false;
-    }
-}
