@@ -17,6 +17,8 @@ var historysize = 10; // Länge der History im Arbeitsspeicher
 
 /**
  * Messagehistory Log
+ * ACHTUNG: Logeinträge werden mit historyArray.add() hinzugefügt.
+ * Das ist eine selbst definierte Hilfsfunktion (siehe unten)
  * @type {Array}
  */
 var historyArray = [];
@@ -31,7 +33,7 @@ var usersonlineSet = {};
  * Array mit Farben die Usern zufällig zugewiesen werden
  * @type {Array}
  */
-var farbArray = ['#66D9EF', '#79E225', '#FD971C'];
+var farbArray = ['#556270', '#4ECDC4', '#C7F464', '#FF6B6B', '#C44D58'];
 farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 

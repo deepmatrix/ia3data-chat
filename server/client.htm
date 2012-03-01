@@ -71,19 +71,19 @@
 
                     console.log(data);
 
-                    var obj = jQuery.parseJSON(data);
+                    // var obj = jQuery.parseJSON(data);
 
-                    var html = '<span class="message">';
+                    // var html = '<span class="message">';
 
-                    html += '<span class="zeit">' + obj.zeit + '</span>';
-                    html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
-                    html += obj.msg;
+                    // html += '<span class="zeit">' + obj.zeit + '</span>';
+                    // html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
+                    // html += obj.msg;
 
-                    html += '</span>';
+                    // html += '</span>';
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-                    $('#messages').append(html);
+                    $('#messages').append(data);
 
                 });
 
