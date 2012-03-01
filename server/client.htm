@@ -42,6 +42,9 @@
                 /** Objekt dass Serverconnection herstellt und verwaltet */
                 var webSocket = io.connect(serverurl);
 
+                /** Lösche Message Box bei Browser-Aktualisierung */
+                $('#messages').text('');
+
                 /** Server Verbindung wird erstmalig hergestellt */
                 webSocket.on('connect', function() {
                     
