@@ -13,7 +13,6 @@ $(document).ready(function() {
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    $("#messages").html("Geben Sie Ihren Namen ein.");
                     username = message;
                     webSocket.emit('username', username);
 
