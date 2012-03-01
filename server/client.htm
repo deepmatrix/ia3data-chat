@@ -42,21 +42,39 @@
                 /** Objekt dass Serverconnection herstellt und verwaltet */
                 var webSocket = io.connect(serverurl);
 
-                /** Server Verbindung wird hergestellt */
+                /** Server Verbindung wird erstmalig hergestellt */
                 webSocket.on('connect', function() {
                     
                     // Username setzen
+                    // TODO: Promt Box ersetzen!
                     username = prompt("Dein Username?","");
+
+                    // TODO: Usernamen prüfen
+                    
+                    // TODO EVTL: Prüfen ob Username schon vergeben???
+                    // webSocket.emit('permission', username);
+
                     webSocket.emit('username', username);
+
 
                 });
 
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
+                    var obj = jQuery.parseJSON(data);
+
+                    var html = '<span class="message">';
+
+                    html += '<span class="time">' + obj.time + '</span>';
+                    html += '<span class="username" style="color: ' + obj.color + '">' + obj.username + '</span>';
+                    html += obj.msg;
+
+                    html += '</span>';
+
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-                    $('#messages').append(data);
+                    $('#messages').append(html);
 
                 });
 
@@ -73,7 +91,9 @@
 
                 webSocket.on('history', function(data) {
 
-                    // TODO
+                    // TODO: JSON Array mit Objekten
+                    // Muss mit FOR schleife durchlaufen werden
+                    // Prüfung auf (servermessage), da 2 Message Typen vorhanden!
                     $('#messages').append(data);
 
                 });
