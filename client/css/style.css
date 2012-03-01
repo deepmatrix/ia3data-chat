@@ -280,7 +280,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 /* SPRITE BUTTON */
 
-a.buttonBenutzer {
+a.usernameButton {
 	float:left;
 	background: url(../img/Buttons_Chat_chat_to_profile.png) no-repeat 0 0;
 	width: 50px;
