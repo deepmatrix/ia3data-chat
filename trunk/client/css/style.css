@@ -189,12 +189,12 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	border-radius: 10px;
 }
 
-#controls {
+#eingaben {
 	margin:10px;
 	height:55px;
 }
 
-#nachrichten{
+#nachrichtenVerlauf{
 	margin:20px auto 10px auto;
 	background-color: #FFFFFF;
 	height:200px;
@@ -206,11 +206,8 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	padding:20px;
 }
 
-.row{
-	display:block;
-}
 
-#messageText{
+#nachrichtenEingabe{
 	margin:3px 0px 0px 0px;
 	height:44px;
 	width:200px;
@@ -221,7 +218,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 /*SPRITE BUTTON*/
 
-a.button_avatar {
+a.buttonBenutzer {
 	float:left;
 	background: url(../img/Buttons_Chat_chat_to_profile.png) no-repeat 0 0;
 	width: 50px;
@@ -231,4 +228,4 @@ a.button_avatar {
 	margin:3px 5px 0px 10px;
 }
 
-a.button_avatar:hover { background-position: 0 -50px; }
+a.buttonBenutzer:hover { background-position: 0 -50px; }
