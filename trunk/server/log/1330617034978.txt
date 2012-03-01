@@ -1,3 +1,0 @@
-{"zeit":"16:50","servermsg":"undefined left the chat."}
-{"zeit":"16:50","servermsg":" Fannon joined the Chat"}
-{"zeit":"16:50","servermsg":" Fannon changed name to Test"}
