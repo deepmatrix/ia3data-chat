@@ -33,7 +33,7 @@
 	<script src="lib/modernizr-1.7.min.js"></script>
 	<script src="lib/jquery-1.7.1.min.js"></script>
 	<script src="lib/jQuery.lionbars.0.2.1.min.js"></script>
-	
+	<script src="http://localhost:8000/socket.io/socket.io.js"></script>
 	<script src="js/script.js"></script>
 
 
@@ -42,31 +42,13 @@
 <body>
 
 <div class="chat">
-	<div id="history"> 
-    				<span class="row">1 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">2 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">3 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
-    				<span class="row">4 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">5 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">6 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
-    				<span class="row">7 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">8 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">9 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
-    				<span class="row">10 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">11 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">12 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
-    				<span class="row">13 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">14 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">15 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
-    				<span class="row">16 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Hi Simon, wie geht es dir?</span></span>
-    				<span class="row">17 <span class="name" style="color: #0011FF;">Simon: </span><span class="message">Hi Emi, gut und dir?</span></span>
-    				<span class="row">18 <span class="name" style="color: #f00;">Emanuel: </span><span class="message">Ja passt voll!</span></span>
+	<div id="messages"> 
 	</div>
 	<div id="controls">
 		<!--User Button und Textfeld-Message-->
 		<a href="#" class="button_avatar">Press it</a>
-		<form action="textarea.htm">
-    		<textarea id="textbox" name="message_text" cols="50" rows="10"></textarea>
+		<form>
+			<textarea id="messageText" type="text" onkeypress="return runScript(event)"></textarea>
 		</form>
 	</div>
 </div>
