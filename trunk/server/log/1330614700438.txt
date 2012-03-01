@@ -1,2 +1,9 @@
 {"zeit":"16:11","servermsg":" tesat joined the Chat"}
 {"zeit":"16:12","servermsg":" test joined the Chat"}
+{"zeit":"16:17","severmsg":"test left the chat."}
+{"zeit":"16:17","servermsg":" Test joined the Chat"}
+{"zeit":"16:30","severmsg":"Test left the chat."}
+{"zeit":"16:30","servermsg":" test joined the Chat"}
+{"zeit":"16:30","username":"test","farbe":"#F80E27","msg":"adsg"}
+{"zeit":"16:35","severmsg":"tesat left the chat."}
+{"zeit":"16:35","servermsg":" test joined the Chat"}
