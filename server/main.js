@@ -8,7 +8,6 @@ process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
 
 // Variablen:
-/** Messagehistory */
 
 /**
  * Messagehistory Log
@@ -17,7 +16,7 @@ var port = 8000; // Server Port
 var historyArray = []; // TODO: Muss gelegentlich gesäubert werden!
 
 /**
- * Set mit den Namen aller User die online sind
+ * Set mit den Namen aller User die online sind (Nur gefaktes Set)
  * @type {Object}
  */
 var usersonlineSet = {};
@@ -29,13 +28,15 @@ var usersonlineSet = {};
 var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
 colorArray = shuffle(colorArray); // Zufallsreihenfolge
 
-console.info(getTime() + ' Node.js Chat START ');
+
 
 // Module importieren
-var webSocket = require('socket.io').listen(port);
+var webSocket = require('socket.io').listen(port); /* http://socket.io/ */
+var colors = require('colors'); /** Farben für die Konsole */
 
 // Initialisierung
 webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
+console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
 // Server Logik
 
@@ -43,7 +44,7 @@ webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 webSocket.sockets.on('connection', function(client) {
 
     /** Client verbindet sich neu mit Server */
-    console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.');
+    console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
 
     /** HISTORY Vergangene Chat-Einträge nachsenden */
     // TODO: Nur Übergangslösung
@@ -56,6 +57,9 @@ webSocket.sockets.on('connection', function(client) {
     /** Client Farbe zuweisen */
     client.farbe = colorArray.shift();
 
+    /** Client Uhrzeit "Online seit" zuweisen */
+    client.onlinesince = getTime();
+
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
 
@@ -66,10 +70,7 @@ webSocket.sockets.on('connection', function(client) {
         }
 
         data = cleanInput(data); // Input säubern
-        
-        console.log(getTime() + ' USERNAME GESETZT: ' + data);
 
-        
 
         // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
 
@@ -81,6 +82,7 @@ webSocket.sockets.on('connection', function(client) {
 
             msg = getTime() + ' ' + alterUsername + ' changed name to ' + client.username;
             webSocket.sockets.emit('servermessage', msg);
+            console.log(msg);
 
             delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
@@ -93,6 +95,7 @@ webSocket.sockets.on('connection', function(client) {
 
             msg = getTime() + ' ' + client.username + ' joined the Chat';
             webSocket.sockets.emit('servermessage', msg);
+            console.log(msg);
 
         }
 
@@ -102,41 +105,48 @@ webSocket.sockets.on('connection', function(client) {
     /** Client sendet Nachricht an Server */
     client.on('message', function(data) {
 
-        // TODO: Als JSON verschicken
-
         /** Eingehende Message verarbeiten */
-        var msg = '';
-
         data = cleanInput(data); // Input säubern
 
-        msg += '<li>' + getTime() + ' ' + client.username + ': ' + data + '</li>';
-  
-        console.log(getTime() + " Message: " + msg);
+        var obj = {
+            time: getTime(),
+            username: client.username,
+            color: client.farbe,
+            msg: data
+        };
 
-        /** In Message Log einfügen */
-        historyArray.push(htmlstr);
+        console.log(getTime() + ' ' + client.username + ': ' + data);
 
-        /** Sendet an alle verbundenen Clienten die Nachricht raus */
-        webSocket.sockets.emit('message', msg);
+        /** Objekt in Message Log einfügen */
+        historyArray.push(obj);
+
+        /** Objekt in JSON String konvertieren */
+        var json = JSON.stringify(obj);
+
+        /** Sendet an ALLE verbundenen Clienten den JSON String */
+        webSocket.sockets.emit('message', json);
 
     });
 
-    /** Client fragt an welche User online sind */
-    client.on('usersonline', function(data) {
+    /**
+     * Client fragt an welche User online sind
+     * Gibt Array mit aktuellen Usern zurück
+     * @return {JSON}
+     */
+    client.on('usersonline', function() {
 
         console.log(getTime() + ' USERSONLINE ANFRAGE');
 
-        // TODO: Als JSON verschicken
-        var useronlinelist = '';
-
-        for (var username in usersonlineSet) {
-            useronlinelist += '<li>';
-            useronlinelist += username;
-            useronlinelist += '</li>';
+        var obj = [];
+        
+        for (var o in usersonlineSet) {
+            obj.push(o);
         }
 
+        var json = JSON.stringify(obj);
+
         /** Nur an den anfragenden Clienten die Onlineliste schicken! */
-        client.emit('usersonline', useronlinelist);
+        client.emit('usersonline', json);
 
     });
 
@@ -158,7 +168,12 @@ webSocket.sockets.on('connection', function(client) {
 /** Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt */
 function getTime() {
     var currentTime = new Date();
-    return '' + currentTime.getHours() + ':' + currentTime.getMinutes();
+
+    function volle(Value) {
+        return (Value > 9) ? "" + Value : "0" + Value;
+    }
+
+    return '' + volle(currentTime.getHours()) + ':' + volle(currentTime.getMinutes());
 }
 
 function cleanInput(data) {

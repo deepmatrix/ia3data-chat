@@ -80,9 +80,23 @@
 
                 webSocket.on('usersonline', function(data) {
 
-                    // TODO
-                    var msg = '<span class="usersonline">' + data + '</span>'
-                    $('#messages').append(msg);
+                    console.log(data);
+                    var obj = jQuery.parseJSON(data);
+
+                    var html = '<span class="usersonline">';
+
+                    for (o in obj) {
+
+                        console.log(o);
+
+                        // Für jeden Datensatz eine Row
+                        html += '<li>' + obj[o] + '</li>'
+
+                    }
+
+                    html += '</span>';
+                    
+                    $('#messages').append(html);
 
                 });
 
