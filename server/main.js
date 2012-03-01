@@ -57,6 +57,14 @@ var fs = require('fs'); // Filesystem API zum schreiben der Logdateien
 
 /** Logging Level von Websockets reduzieren */
 webSocket.set('log level', 1);
+webSocket.set('origins', '*:*');
+webSocket.enable('browser client minification');
+webSocket.enable('browser client etag');
+webSocket.enable('browser client gzip');
+
+
+// TODO: Same Origin Policy nicht gelöst! Chrome verweigert Dienst.
+
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
