@@ -265,6 +265,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	border-color:#878787;
 	border-width:1px;
 	overflow:auto;
+	display:block;
 	padding:20px;
 }
 
@@ -274,6 +275,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 	height:44px;
 	width:200px;
 	overflow:auto;
+	overflow-x:hidden;
 	resize: none;
 }
 
@@ -290,4 +292,4 @@ a.usernameButton {
 	margin:3px 5px 0px 10px;
 }
 
-a.buttonBenutzer:hover { background-position: 0 -50px; }
+a.usernameButton:hover { background-position: 0 -50px; }
