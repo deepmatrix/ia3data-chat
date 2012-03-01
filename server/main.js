@@ -1,19 +1,25 @@
-/***********************************/
-/* Multiuser Chat via Node.js      */
-/* Emanuel Kössel / Simon Heimler  */
-/***********************************/
+////////////////////////////////////////////////////
+// Multiuser Chat via Node.js und Socket.io       //
+////////////////////////////////////////////////////
+// Ein Projekt von Emanuel Kössel & Simon Heimler //
+// 2012 > FH Augsburg > IAM3 > ia3.Netz & Data    //
+////////////////////////////////////////////////////
 
-////////////////////////////////
-// Parameter und Variablen: ////
-////////////////////////////////
+
+
+//////////////////////////////////
+// Parameter und Variablen: //////
+//////////////////////////////////
+
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
+var historysize = 10; // Länge der History im Arbeitsspeicher
 
 /**
  * Messagehistory Log
  * @type {Array}
  */
-var historyArray = []; // TODO: Muss gelegentlich gesäubert werden!
+var historyArray = [];
 
 /**
  * Set mit den Namen aller User die online sind (Nur gefaktes Set)
@@ -25,44 +31,46 @@ var usersonlineSet = {};
  * Array mit Farben die Usern zufällig zugewiesen werden
  * @type {Array}
  */
-var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
-colorArray = shuffle(colorArray); // Zufallsreihenfolge
+var farbArray = ['#66D9EF', '#79E225', '#FD971C'];
+farbArray = shuffle(farbArray); // Zufallsreihenfolge
+
 
 
 //////////////////////////////////
 // Module importieren: ///////////
 //////////////////////////////////
+
 var webSocket = require('socket.io').listen(port); /* http://socket.io/ */
 var colors = require('colors'); /** Farben für die Konsole */
+
+
 
 //////////////////////////////////
 // Chatserver Initialisierung ////
 //////////////////////////////////
+
 webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
+
+
 
 //////////////////////////////////
 // Server Logik (via Socket.io) //
 //////////////////////////////////
-/* Client verbindet sich mit Server */
+
+/** Client verbindet sich mit Server */
 webSocket.sockets.on('connection', function(client) {
 
     /** Client verbindet sich neu mit Server */
     console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
 
     /** HISTORY Vergangene Chat-Einträge nachsenden */
-    // TODO: Nur Übergangslösung
-    // TODO: Sendet keine Servernachrichten mit.
-    var htmlstr = '<div style="color: #999;">';
-    htmlstr += historyArray.join('');
-    htmlstr += '</div>';
-    client.emit('history', htmlstr);
+    client.emit('history', JSON.stringify(historyArray));
 
-    /** Client Farbe zuweisen */
-    client.farbe = colorArray.shift();
+    /** Client neue Farbe zuweisen. Rotiert das FarbArray durch */
+    client.farbe = farbArray.pop();
+    farbArray.unshift(client.farbe);
 
-    /** Client Uhrzeit "Online seit" zuweisen */
-    client.onlinesince = getTime();
 
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
@@ -95,7 +103,7 @@ webSocket.sockets.on('connection', function(client) {
             };
 
             /** Objekt in Message Log einfügen */
-            historyArray.push(obj);
+            historyArray.add(obj);
 
             /** Objekt in JSON String konvertieren */
             json = JSON.stringify(obj);
@@ -119,7 +127,7 @@ webSocket.sockets.on('connection', function(client) {
             };
 
             /** Objekt in Message Log einfügen */
-            historyArray.push(obj);
+            historyArray.add(obj);
 
             /** Objekt in JSON String konvertieren */
             json = JSON.stringify(obj);
@@ -149,7 +157,7 @@ webSocket.sockets.on('connection', function(client) {
         console.log(getTime() + ' ' + client.username + ': ' + data);
 
         /** Objekt in Message Log einfügen */
-        historyArray.push(obj);
+        historyArray.add(obj);
 
         /** Objekt in JSON String konvertieren */
         var json = JSON.stringify(obj);
@@ -161,8 +169,7 @@ webSocket.sockets.on('connection', function(client) {
 
     /**
      * Client fragt an welche User online sind
-     * Gibt Array mit aktuellen Usern zurück
-     * @return {JSON}
+     * Sendet Array mit aktuellen Usern zurück, aber nur den Client der angefragt hat
      */
     client.on('usersonline', function() {
 
@@ -181,7 +188,9 @@ webSocket.sockets.on('connection', function(client) {
 
     });
 
-    /** Client beendet Session*/
+    /**
+     * Client beendet Verbindung zum Server
+     */
     client.on('disconnect', function() {
         console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
         
@@ -194,7 +203,7 @@ webSocket.sockets.on('connection', function(client) {
         };
 
         /** Objekt in Message Log einfügen */
-        historyArray.push(obj);
+        historyArray.add(obj);
 
         /** Objekt in JSON String konvertieren */
         json = JSON.stringify(obj);
@@ -203,7 +212,6 @@ webSocket.sockets.on('connection', function(client) {
         webSocket.sockets.emit('servermessage', json);
         console.log( obj.zeit + ' ' + msg);
 
-        colorArray.push(client.farbe); // Userfarbe in Array zurückgeben
         delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen
 
     });
@@ -214,8 +222,6 @@ webSocket.sockets.on('connection', function(client) {
 //////////////////////////////////
 // Hilfsfunktionen ///////////////
 //////////////////////////////////
-
-
 
 /**
  * Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt
@@ -232,10 +238,24 @@ function getTime() {
 }
 
 /**
+ * Definiert neue Funktion auf dem historyArray um neue Logeinträge einzufügen.
+ * Wenn die History größer ist als in var historysize angegeben kürze sie.
+ * @param  {JSON} json JSON Objekt
+ */
+historyArray.add = function(json) {
+
+    this.push(json);
+
+    if (this.length > historysize) {
+        this.shift();
+    }
+};
+
+/**
  * Hilfsfunktion die empfangene Daten verarbeitet:
  * - Whitespace vorne und hinten entfernen
  * - HTML Tags entfernen (Sicherheitsfeature!)
- * @param  {string} data Empfangene Socket.io Daten
+ * @param  {string} data Vom Client empfangene Daten
  * @return {string}
  */
 function cleanInput(data) {
@@ -244,10 +264,10 @@ function cleanInput(data) {
     return data;
 }
 
-// http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling
 /**
- * Array durchwürfeln
- * @param  {[type]} array [description]
+ * Array zufällig neuordnen
+ * http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling
+ * @param  {[]} array Array der neugemischt werden soll.
  * @return {[type]}
  */
 function shuffle(array) {
