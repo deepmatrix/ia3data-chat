@@ -19,19 +19,31 @@ $(document).ready(function() {
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
+                    var obj = jQuery.parseJSON(data);
+
+                    var html = '<span class="message">';
+
+                    html += '<span class="time">' + obj.time + '</span>';
+                    html += '<span class="username" style="color: ' + obj.color + '">' + obj.username + '</span>';
+                    html += obj.msg;
+                    
+                    html += '</span>';
+
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-                    $('#messages').append(data);
+                    $('#messages').append(html);
 
                 });
 
                 /** Server sendet Servermessage an Client */
                 webSocket.on('servermessage', function(data) {
 
+                    var obj = jQuery.parseJSON(data);
+
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
                     
-                    var msg = '<li class="servermessage">' + data + '</li>'
+                    var msg = '<li class="servermessage">' + obj.msg + '</li>'
                     $('#messages').append(msg);
 
                 });
