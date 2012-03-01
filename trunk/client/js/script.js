@@ -25,8 +25,8 @@ $(document).ready(function() {
 
                     var html = '<span class="message">';
 
-                    html += '<span class="time">' + obj.time + '</span>';
-                    html += '<span class="username" style="color: ' + obj.color + '">' + obj.username + '</span>';
+                    html += '<span class="zeit">' + obj.zeit + '</span>';
+                    html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
                     html += obj.msg;
 
                     html += '</span>';

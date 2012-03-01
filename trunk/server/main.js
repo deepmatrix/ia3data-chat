@@ -166,7 +166,7 @@ webSocket.sockets.on('connection', function(client) {
      */
     client.on('usersonline', function() {
 
-        console.log(getTime() + ' USERSONLINE ANFRAGE'.green);
+        console.log(getTime() + ' USERSONLINE ANFRAGE');
 
         var obj = [];
         
