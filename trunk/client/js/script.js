@@ -23,7 +23,7 @@ $(document).ready(function() {
 
                     var obj = jQuery.parseJSON(data);
 
-                    var html = '<span class="message">';
+                    var html = '<span class="m                                         essage">';
 
                     html += '<span class="zeit">' + obj.zeit + '</span>';
                     html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
