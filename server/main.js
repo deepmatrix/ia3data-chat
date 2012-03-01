@@ -42,8 +42,9 @@ farbArray = shuffle(farbArray); // Zufallsreihenfolge
 // Module importieren: ///////////
 //////////////////////////////////
 
-var webSocket = require('socket.io').listen(port); /* http://socket.io/ */
+var webSocket = require('socket.io').listen(port); /** http://socket.io/ */
 var colors = require('colors'); /** Farben für die Konsole */
+var fs = require('fs'); /** Filesystem API zum schreiben der Logdateien*/
 
 
 
@@ -51,8 +52,13 @@ var colors = require('colors'); /** Farben für die Konsole */
 // Chatserver Initialisierung ////
 //////////////////////////////////
 
-webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
+/** Logging Level von Websockets reduzieren */
+webSocket.set('log level', 1);
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
+
+/** Erstellt im Dateisystem eine Logdatei mit UTC Datestamp Dateinamen */
+var logfile = fs.createWriteStream("./log/" + new Date().getTime() + ".txt",
+    {flags: "a", encoding: "utf-8"});
 
 
 
@@ -89,9 +95,10 @@ webSocket.sockets.on('connection', function(client) {
 
         // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
 
-        if (client.username) { // Client hat schon Usernamen, also ändere ihn
+        if (client.username) {
 
-            
+            // Client hat schon Usernamen, also ändere ihn
+    
             var alterUsername = client.username;
             client.username = data;
             delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
@@ -118,6 +125,7 @@ webSocket.sockets.on('connection', function(client) {
         } else {
 
             // Neuer User
+            
             client.username = data;
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
@@ -197,7 +205,6 @@ webSocket.sockets.on('connection', function(client) {
         console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
         
         var msg = client.username + ' left the chat.';
-
     
         obj = {
             zeit: getTime(),
@@ -245,6 +252,10 @@ function getTime() {
  * @param  {JSON} json JSON Objekt
  */
 historyArray.add = function(json) {
+
+    // Schreibt Logdatei auf Server
+    // TODO: Überschreibt alte Logdateien!
+    logfile.write(JSON.stringify(json) + '\n');
 
     this.push(json);
 
