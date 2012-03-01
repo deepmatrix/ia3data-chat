@@ -73,20 +73,21 @@ $(document).ready(function() {
 
 
                 /** Event-Handler: Enter Button */
-                $('#chat').keypress (function() {
+                $('#nachrichtenEingabe').keypress (function(e) {
 
-                    // TODO : Enter abfragen: IF
-
-                    // Nachricht auslesen
-                    var message = $('#messageText').val();
-
-                    if (message) {
-
+                    
+                    // Enter abfragen
+                    if(e.keyCode == '13') {
+                        
+                        // Nachricht auslesen
+                        var message = $('#nachrichtenEingabe').val();
+        
                         // Nachricht versenden
                         webSocket.send(message);
             
                         // Textbox leeren
-                        $('#messageText').val('');
+                        $('#nachrichtenEingabe').val('');
+                    
                     }
 
                 });
