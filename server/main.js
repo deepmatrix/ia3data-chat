@@ -3,11 +3,11 @@
 /* Emanuel Kössel / Simon Heimler  */
 /***********************************/
 
-// Parameter:
+////////////////////////////////
+// Parameter und Variablen: ////
+////////////////////////////////
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
-
-// Variablen:
 
 /**
  * Messagehistory Log
@@ -29,17 +29,21 @@ var colorArray = ['#66D9EF', '#79E225', '#FD971C'];
 colorArray = shuffle(colorArray); // Zufallsreihenfolge
 
 
-
-// Module importieren
+//////////////////////////////////
+// Module importieren: ///////////
+//////////////////////////////////
 var webSocket = require('socket.io').listen(port); /* http://socket.io/ */
 var colors = require('colors'); /** Farben für die Konsole */
 
-// Initialisierung
+//////////////////////////////////
+// Chatserver Initialisierung ////
+//////////////////////////////////
 webSocket.set('log level', 1); /** Logging Level von Websockets reduzieren */
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
-// Server Logik
-
+//////////////////////////////////
+// Server Logik (via Socket.io) //
+//////////////////////////////////
 /* Client verbindet sich mit Server */
 webSocket.sockets.on('connection', function(client) {
 
@@ -206,6 +210,10 @@ webSocket.sockets.on('connection', function(client) {
 
 });
 
+
+//////////////////////////////////
+// Hilfsfunktionen ///////////////
+//////////////////////////////////
 /** Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt */
 function getTime() {
     var currentTime = new Date();
