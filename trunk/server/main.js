@@ -33,7 +33,7 @@ var usersonlineSet = {};
  * Array mit Farben die Usern zufällig zugewiesen werden
  * @type {Array}
  */
-var farbArray = ['#556270', '#4ECDC4', '#C7F464', '#FF6B6B', '#C44D58'];
+var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4'];
 farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 
@@ -101,7 +101,7 @@ webSocket.sockets.on('connection', function(client) {
             
             obj = {
                 zeit: getTime(),
-                severmsg: msg
+                servermsg: msg
             };
 
             /** Objekt in Message Log einfügen */
@@ -125,7 +125,7 @@ webSocket.sockets.on('connection', function(client) {
             
             obj = {
                 zeit: getTime(),
-                severmsg: msg
+                servermsg: msg
             };
 
             /** Objekt in Message Log einfügen */
