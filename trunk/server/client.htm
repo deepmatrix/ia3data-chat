@@ -27,6 +27,10 @@
             .usersonline {
                 color: green;
             }
+
+            .history {
+                color: #999;
+            }
         </style>
 
         <script src="http://localhost:8000/socket.io/socket.io.js"></script>
@@ -65,7 +69,7 @@
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
-                    console.log();
+                    console.log(data);
 
                     var obj = jQuery.parseJSON(data);
 
@@ -99,7 +103,9 @@
                     // TODO: JSON Array mit Objekten
                     // Muss mit FOR schleife durchlaufen werden
                     // Prüfung auf (servermessage), da 2 Message Typen vorhanden!
-                    $('#messages').append(data);
+                    
+                    var html = '<div class="history">' + data + '</div>'
+                    $('#messages').append(html);
                     
 
                 });
