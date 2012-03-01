@@ -1,0 +1,5 @@
+{"zeit":"17:43","servermsg":"Gast-1 joined the Chat"}
+{"zeit":"17:43","servermsg":"Gast-1 left the chat."}
+{"zeit":"17:43","servermsg":"estas joined the Chat"}
+{"zeit":"17:43","servermsg":"estas left the chat."}
+{"zeit":"17:43","servermsg":"asg joined the Chat"}

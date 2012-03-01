@@ -1,0 +1,14 @@
+{"zeit":"17:17","servermsg":"undefined left the chat."}
+{"zeit":"17:20","servermsg":"Fannon joined the Chat"}
+{"zeit":"17:20","servermsg":"Fannon left the chat."}
+{"zeit":"17:20","servermsg":"Gast-4 joined the Chat"}
+{"zeit":"17:21","username":"Gast-4","farbe":"#F7991D","msg":"testa"}
+{"zeit":"17:21","servermsg":"undefined left the chat."}
+{"zeit":"17:21","servermsg":"undefined left the chat."}
+{"zeit":"17:21","servermsg":"teast joined the Chat"}
+{"zeit":"17:21","username":"teast","farbe":"#8469D4","msg":"asg"}
+{"zeit":"17:23","servermsg":"Fannon joined the Chat"}
+{"zeit":"17:23","username":"teast","farbe":"#8469D4","msg":"test"}
+{"zeit":"17:23","username":"Gast-4","farbe":"#F7991D","msg":"test"}
+{"zeit":"17:23","username":"teast","farbe":"#8469D4","msg":"test"}
+{"zeit":"17:23","username":"Gast-4","farbe":"#F7991D","msg":"asdggg"}

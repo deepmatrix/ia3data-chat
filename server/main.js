@@ -14,6 +14,7 @@
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
 var historysize = 10; // Länge der History im Arbeitsspeicher
+var gastname = 'Gast'; // Nur für Ausnahmefälle nötig
 
 /**
  * Messagehistory Log
@@ -44,9 +45,9 @@ var userGesamt = 0;
 // Module importieren: ///////////
 //////////////////////////////////
 
-var webSocket = require('socket.io').listen(port); /** http://socket.io/ */
-var colors = require('colors'); /** Farben für die Konsole */
-var fs = require('fs'); /** Filesystem API zum schreiben der Logdateien*/
+var webSocket = require('socket.io').listen(port); // http://socket.io/
+var colors = require('colors'); // Farben für die Konsole
+var fs = require('fs'); // Filesystem API zum schreiben der Logdateien
 
 
 
@@ -58,10 +59,18 @@ var fs = require('fs'); /** Filesystem API zum schreiben der Logdateien*/
 webSocket.set('log level', 1);
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
-/** Erstellt im Dateisystem eine Logdatei mit UTC Datestamp Dateinamen */
-var logfile = fs.createWriteStream("./log/" + new Date().getTime() + ".txt",
+/** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
+try {
+
+    var logfile = fs.createWriteStream("./log/" + new Date().getTime() + ".txt",
     {flags: "a", encoding: "utf-8"});
 
+} catch(e) {
+
+    console.log(getTime() + ' FEHLER BEIM ERSTELLEN DER LOGDATEI'.red);
+    console.log(getTime() + ' ' + e + ''.red);
+
+}
 
 
 //////////////////////////////////
@@ -71,104 +80,126 @@ var logfile = fs.createWriteStream("./log/" + new Date().getTime() + ".txt",
 /** Client verbindet sich mit Server */
 webSocket.sockets.on('connection', function(client) {
 
-    /** Client verbindet sich neu mit Server */
-    console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
-    userGesamt += 1;
+    try {
 
-    /** HISTORY Vergangene Chat-Einträge nachsenden */
-    client.emit('history', JSON.stringify(historyArray));
+        /** Client verbindet sich neu mit Server */
+        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
+        userGesamt += 1;
 
-    /** Client neue Farbe zuweisen. Rotiert das FarbArray durch */
-    client.farbe = farbArray.pop();
-    farbArray.unshift(client.farbe);
+        /** HISTORY Vergangene Chat-Einträge nachsenden */
+        client.emit('history', JSON.stringify(historyArray));
+
+        /** Client neue Farbe zuweisen. Rotiert das FarbArray durch */
+        client.farbe = farbArray.pop();
+        farbArray.unshift(client.farbe);
+
+    } catch(e) {
+
+            // Schwerer Fehler, sollte nicht passieren! Zerstört Konsistenz des Chats
+            console.log(getTime() + ' SCHWERER FEHLER!'.red);
+            console.log(getTime() + ' FEHLER BEI CLIENT CONNECT'.red);
+            console.log(getTime() + ' ' + e + ''.red);
+
+    }
 
 
     /** Client sendet seinen Usernamen */
     client.on('username', function(data) {
 
-        var msg; // Servermessage
-        var obj; // JSON Object
-        var json; // JSON String
+        try {
 
-        if (!data || data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
-            data = 'Gast';
+            var msg; // Servermessage
+            var obj; // JSON Object
+            var json; // JSON String
+
+            if (!data || data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
+                data = gastname + '-' + userGesamt;
+            }
+
+            data = cleanInput(data); // Input säubern
+
+            /* Stellt sicher dass die Usernamen eindeutig sind */
+            if (data in usersonlineSet && data !== client.username ) {
+                console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.red);
+                data += '-' + userGesamt; // Eindeutige ID anhängen
+            }
+
+            if (data === client.username) {
+
+                // Anfrage ignorieren. Username ist identisch
+
+            } else if (client.username){
+
+                // Client hat schon Usernamen, also ändere ihn
+        
+                var alterUsername = client.username;
+                client.username = data;
+                delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
+                usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
+
+                msg = alterUsername + ' changed name to ' + client.username;
+                
+                obj = {
+                    zeit: getTime(),
+                    servermsg: msg
+                };
+
+                /** Objekt in Message Log einfügen */
+                historyArray.add(obj);
+
+                /** Objekt in JSON String konvertieren */
+                json = JSON.stringify(obj);
+
+                /** Sendet an ALLE verbundenen Clienten den JSON String */
+                webSocket.sockets.emit('servermessage', json);
+                console.log(obj.zeit + ' ' + msg);
+                
+
+            } else {
+
+                // Neuer User
+                
+                client.username = data;
+                usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
+
+                msg = client.username + ' joined the Chat';
+                
+                obj = {
+                    zeit: getTime(),
+                    servermsg: msg
+                };
+
+                /** Objekt in Message Log einfügen */
+                historyArray.add(obj);
+
+                /** Objekt in JSON String konvertieren */
+                json = JSON.stringify(obj);
+
+                /** Sendet an ALLE verbundenen Clienten den JSON String */
+                webSocket.sockets.emit('servermessage', json);
+                console.log(obj.zeit + ' ' + msg);
+
+            }
+
+        } catch(e) {
+
+            console.log(getTime() + ' FEHLER BEI CLIENT USERNAME'.red);
+            console.log(getTime() + ' ' + e + ''.red);
+
         }
-
-        data = cleanInput(data); // Input säubern
-
-        /* Stellt sicher dass die Usernamen eindeutig sind */
-        if (data in usersonlineSet && data !== client.username ) {
-            console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.red);
-            data += '-' + userGesamt; // Eindeutige ID anhängen
-        }
-
-        if (data === client.username) {
-
-            // Anfrage ignorieren. Username ist identisch
-
-        } else if (client.username){
-
-            // Client hat schon Usernamen, also ändere ihn
-    
-            var alterUsername = client.username;
-            client.username = data;
-            delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
-            usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
-
-            msg = alterUsername + ' changed name to ' + client.username;
-            
-            obj = {
-                zeit: getTime(),
-                servermsg: msg
-            };
-
-            /** Objekt in Message Log einfügen */
-            historyArray.add(obj);
-
-            /** Objekt in JSON String konvertieren */
-            json = JSON.stringify(obj);
-
-            /** Sendet an ALLE verbundenen Clienten den JSON String */
-            webSocket.sockets.emit('servermessage', json);
-            console.log(obj.zeit + ' ' + msg);
-            
-
-        } else {
-
-            // Neuer User
-            
-            client.username = data;
-            usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
-
-            msg = client.username + ' joined the Chat';
-            
-            obj = {
-                zeit: getTime(),
-                servermsg: msg
-            };
-
-            /** Objekt in Message Log einfügen */
-            historyArray.add(obj);
-
-            /** Objekt in JSON String konvertieren */
-            json = JSON.stringify(obj);
-
-            /** Sendet an ALLE verbundenen Clienten den JSON String */
-            webSocket.sockets.emit('servermessage', json);
-            console.log(obj.zeit + ' ' + msg);
-
-        }
-
+        
     });
 
 
     /** Client sendet Nachricht an Server */
     client.on('message', function(data) {
 
-        /** Eingehende Message verarbeiten */
-        data = cleanInput(data); // Input säubern
+        try {
 
-        if (data) { // Nur wenn Daten gültig
+            /** Eingehende Message verarbeiten */
+            data = cleanInput(data); // Input säubern
+
+            if (data) { // Nur wenn Daten gültig
 
             var obj = {
                 zeit: getTime(),
@@ -188,11 +219,22 @@ webSocket.sockets.on('connection', function(client) {
             /** Sendet an ALLE verbundenen Clienten den JSON String */
             webSocket.sockets.emit('message', json);
 
-        } else {
+            } else {
 
-            console.log(getTime() + ' UNGÜLTIGE MESSAGE DATEN'.red);
+                console.log(getTime() + ' UNGÜLTIGE MESSAGE DATEN'.red);
+
+            }
+
+        } catch(e) {
+
+            console.log(getTime() + ' FEHLER BEI CLIENT MESSAGE'.red);
+            console.log(getTime() + ' ' + e);
+
+            client.disconnect('FEHLER!');
 
         }
+
+        
 
     });
 
@@ -202,18 +244,27 @@ webSocket.sockets.on('connection', function(client) {
      */
     client.on('usersonline', function() {
 
-        console.log(getTime() + ' USERSONLINE ANFRAGE'.green);
+        try {
 
-        var obj = [];
-        
-        for (var o in usersonlineSet) {
-            obj.push(o);
+            console.log(getTime() + ' USERSONLINE ANFRAGE'.green);
+
+            var obj = [];
+            
+            for (var o in usersonlineSet) {
+                obj.push(o);
+            }
+
+            var json = JSON.stringify(obj);
+
+            /** Nur an den anfragenden Clienten die Onlineliste schicken! */
+            client.emit('usersonline', json);
+
+        } catch(e) {
+
+            console.log(getTime() + ' FEHLER BEI CLIENT USERONLINE ANFRAGE'.red);
+            console.log(getTime() + ' ' + e);
+
         }
-
-        var json = JSON.stringify(obj);
-
-        /** Nur an den anfragenden Clienten die Onlineliste schicken! */
-        client.emit('usersonline', json);
 
     });
 
@@ -221,26 +272,36 @@ webSocket.sockets.on('connection', function(client) {
      * Client beendet Verbindung zum Server
      */
     client.on('disconnect', function() {
-        console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
         
-        var msg = client.username + ' left the chat.';
-    
-        obj = {
-            zeit: getTime(),
-            servermsg: msg
-        };
+        try {
 
-        /** Objekt in Message Log einfügen */
-        historyArray.add(obj);
+            console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
+            
+            var msg = client.username + ' left the chat.';
+        
+            obj = {
+                zeit: getTime(),
+                servermsg: msg
+            };
 
-        /** Objekt in JSON String konvertieren */
-        json = JSON.stringify(obj);
+            /** Objekt in Message Log einfügen */
+            historyArray.add(obj);
 
-        /** Sendet an ALLE verbundenen Clienten den JSON String */
-        webSocket.sockets.emit('servermessage', json);
-        console.log( obj.zeit + ' ' + msg);
+            /** Objekt in JSON String konvertieren */
+            json = JSON.stringify(obj);
 
-        delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen
+            /** Sendet an ALLE verbundenen Clienten den JSON String */
+            webSocket.sockets.emit('servermessage', json);
+            console.log( obj.zeit + ' ' + msg);
+
+            delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen
+        
+        } catch(e) {
+
+            console.log(getTime() + ' FEHLER BEI CLIENT DISCONNECT'.red);
+            console.log(getTime() + ' ' + e);
+
+        }
 
     });
 
@@ -274,12 +335,20 @@ historyArray.add = function(json) {
 
     // Schreibt Logdatei auf Server
     // TODO: Überschreibt alte Logdateien!
-    logfile.write(JSON.stringify(json) + '\n');
+    try {
+
+        logfile.write(JSON.stringify(json) + '\n');
+    } catch(e) {
+
+        console.log(getTime() + ' FEHLER BEIM SCHREIBEN DER LOGDATEI'.red);
+        console.log(getTime() + ' ' + e);
+
+    }
 
     this.push(json);
 
     if (this.length > historysize) {
-        this.shift();
+        this.shift(); // Performance?
     }
 };
 
