@@ -36,6 +36,8 @@ var usersonlineSet = {};
 var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4'];
 farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
+/** Gesamtanzahl der User */
+var userGesamt = 0;
 
 
 //////////////////////////////////
@@ -71,6 +73,7 @@ webSocket.sockets.on('connection', function(client) {
 
     /** Client verbindet sich neu mit Server */
     console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
+    userGesamt += 1;
 
     /** HISTORY Vergangene Chat-Einträge nachsenden */
     client.emit('history', JSON.stringify(historyArray));
@@ -93,9 +96,17 @@ webSocket.sockets.on('connection', function(client) {
 
         data = cleanInput(data); // Input säubern
 
-        // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
+        /* Stellt sicher dass die Usernamen eindeutig sind */
+        if (data in usersonlineSet && data !== client.username ) {
+            console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.red);
+            data += '-' + userGesamt; // Eindeutige ID anhängen
+        }
 
-        if (client.username) {
+        if (data === client.username) {
+
+            // Anfrage ignorieren. Username ist identisch
+
+        } else if (client.username){
 
             // Client hat schon Usernamen, also ändere ihn
     
@@ -104,7 +115,7 @@ webSocket.sockets.on('connection', function(client) {
             delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
-            msg = ' ' + alterUsername + ' changed name to ' + client.username;
+            msg = alterUsername + ' changed name to ' + client.username;
             
             obj = {
                 zeit: getTime(),
@@ -119,7 +130,7 @@ webSocket.sockets.on('connection', function(client) {
 
             /** Sendet an ALLE verbundenen Clienten den JSON String */
             webSocket.sockets.emit('servermessage', json);
-            console.log( obj.zeit + ' ' + msg);
+            console.log(obj.zeit + ' ' + msg);
             
 
         } else {
@@ -129,7 +140,7 @@ webSocket.sockets.on('connection', function(client) {
             client.username = data;
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
-            msg = ' ' + client.username + ' joined the Chat';
+            msg = client.username + ' joined the Chat';
             
             obj = {
                 zeit: getTime(),
@@ -144,7 +155,7 @@ webSocket.sockets.on('connection', function(client) {
 
             /** Sendet an ALLE verbundenen Clienten den JSON String */
             webSocket.sockets.emit('servermessage', json);
-            console.log( obj.zeit + '' + msg);
+            console.log(obj.zeit + ' ' + msg);
 
         }
 
@@ -157,23 +168,31 @@ webSocket.sockets.on('connection', function(client) {
         /** Eingehende Message verarbeiten */
         data = cleanInput(data); // Input säubern
 
-        var obj = {
-            zeit: getTime(),
-            username: client.username,
-            farbe: client.farbe,
-            msg: data
-        };
+        if (data) { // Nur wenn Daten gültig
 
-        console.log(getTime() + ' ' + client.username + ': ' + data);
+            var obj = {
+                zeit: getTime(),
+                username: client.username,
+                farbe: client.farbe,
+                msg: data
+            };
 
-        /** Objekt in Message Log einfügen */
-        historyArray.add(obj);
+            console.log(getTime() + ' ' + client.username + ': ' + data);
 
-        /** Objekt in JSON String konvertieren */
-        var json = JSON.stringify(obj);
+            /** Objekt in Message Log einfügen */
+            historyArray.add(obj);
 
-        /** Sendet an ALLE verbundenen Clienten den JSON String */
-        webSocket.sockets.emit('message', json);
+            /** Objekt in JSON String konvertieren */
+            var json = JSON.stringify(obj);
+
+            /** Sendet an ALLE verbundenen Clienten den JSON String */
+            webSocket.sockets.emit('message', json);
+
+        } else {
+
+            console.log(getTime() + ' UNGÜLTIGE MESSAGE DATEN'.red);
+
+        }
 
     });
 
@@ -183,7 +202,7 @@ webSocket.sockets.on('connection', function(client) {
      */
     client.on('usersonline', function() {
 
-        console.log(getTime() + ' USERSONLINE ANFRAGE');
+        console.log(getTime() + ' USERSONLINE ANFRAGE'.green);
 
         var obj = [];
         

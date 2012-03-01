@@ -1,0 +1,8 @@
+{"zeit":"16:51","servermsg":"Fannon joined the Chat"}
+{"zeit":"16:51","servermsg":"Fannon left the chat."}
+{"zeit":"16:51","servermsg":"Test joined the Chat"}
+{"zeit":"16:51","servermsg":"Test changed name to Test-2"}
+{"zeit":"16:51","servermsg":"Test-2 changed name to Fannon"}
+{"zeit":"16:52","username":"Fannon","farbe":"#0D9FD8","msg":"asd"}
+{"zeit":"16:52","servermsg":"Fannon-3 joined the Chat"}
+{"zeit":"16:52","username":"Fannon-3","farbe":"#F80E27","msg":"asdf"}

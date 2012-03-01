@@ -1,0 +1,8 @@
+{"zeit":"16:39","servermsg":"undefined left the chat."}
+{"zeit":"16:39","servermsg":" Test joined the Chat"}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":"dasdg"}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":"asdg"}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":""}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":""}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":"asg"}
+{"zeit":"16:39","username":"Test","farbe":"#F80E27","msg":"sadg"}

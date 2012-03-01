@@ -1,0 +1,3 @@
+{"zeit":"16:42","servermsg":" test joined the Chat"}
+{"zeit":"16:42","username":"test","farbe":"#F7991D","msg":"test"}
+{"zeit":"16:42","username":"test","farbe":"#F7991D","msg":"test"}
