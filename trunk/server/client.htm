@@ -69,8 +69,6 @@
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
-                    console.log(data);
-
                     // var obj = jQuery.parseJSON(data);
 
                     // var html = '<span class="message">';
@@ -91,7 +89,7 @@
                 webSocket.on('servermessage', function(data) {
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
+                    // Wird dann JSON Datei sein
                     
                     var msg = '<li class="servermessage">' + data + '</li>'
                     $('#messages').append(msg);
@@ -106,7 +104,6 @@
                     
                     var html = '<div class="history">' + data + '</div>'
                     $('#messages').append(html);
-                    
 
                 });
 
