@@ -191,27 +191,30 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 #controls {
 	margin:10px;
+	height:55px;
 }
 
-#history{
+#messages{
 	margin:20px auto 10px auto;
 	background-color: #FFFFFF;
 	height:200px;
-	width:240px;
+	width:220px;
 	border-style:solid;
 	border-color:#878787;
 	border-width:1px;
 	overflow:auto;
-	padding:10px;
+	padding:20px;
 }
 
 .row{
 	display:block;
 }
 
-#textbox{
-	height:50px;
+#messageText{
+	margin:3px 0px 0px 0px;
+	height:44px;
 	width:200px;
+	overflow:auto;
 	resize: none;
 }
 
