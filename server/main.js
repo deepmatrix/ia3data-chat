@@ -214,7 +214,13 @@ webSocket.sockets.on('connection', function(client) {
 //////////////////////////////////
 // Hilfsfunktionen ///////////////
 //////////////////////////////////
-/** Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt */
+
+
+
+/**
+ * Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt
+ * @return {string}
+ */
 function getTime() {
     var currentTime = new Date();
 
@@ -225,6 +231,13 @@ function getTime() {
     return '' + volle(currentTime.getHours()) + ':' + volle(currentTime.getMinutes());
 }
 
+/**
+ * Hilfsfunktion die empfangene Daten verarbeitet:
+ * - Whitespace vorne und hinten entfernen
+ * - HTML Tags entfernen (Sicherheitsfeature!)
+ * @param  {string} data Empfangene Socket.io Daten
+ * @return {string}
+ */
 function cleanInput(data) {
     data = data.trim(); /** Whitespaces entfernen */
     data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
@@ -232,6 +245,11 @@ function cleanInput(data) {
 }
 
 // http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling
+/**
+ * Array durchwürfeln
+ * @param  {[type]} array [description]
+ * @return {[type]}
+ */
 function shuffle(array) {
     var tmp, current, top = array.length;
 
