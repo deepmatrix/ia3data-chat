@@ -208,7 +208,7 @@ webSocket.sockets.on('connection', function(client) {
     
         obj = {
             zeit: getTime(),
-            severmsg: msg
+            servermsg: msg
         };
 
         /** Objekt in Message Log einfügen */
