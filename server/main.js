@@ -64,6 +64,8 @@ webSocket.sockets.on('connection', function(client) {
     client.on('username', function(data) {
 
         var msg; // Servermessage
+        var obj; // JSON Object
+        var json; // JSON String
 
         if (!data || data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
             data = 'Gast';
@@ -71,21 +73,33 @@ webSocket.sockets.on('connection', function(client) {
 
         data = cleanInput(data); // Input säubern
 
-
         // TODO: Noch kein Prüfung auf doppelte oder ungültige Usernamen!
 
-        if (client.username) {
+        if (client.username) { // Client hat schon Usernamen, also ändere ihn
 
-            // Hat schon Usernamen (Ändert Namen)
+            
             var alterUsername = client.username;
             client.username = data;
-
-            msg = getTime() + ' ' + alterUsername + ' changed name to ' + client.username;
-            webSocket.sockets.emit('servermessage', msg);
-            console.log(msg);
-
             delete usersonlineSet[alterUsername]; // Alten Usernamen aus Set löschen
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
+
+            msg = ' ' + alterUsername + ' changed name to ' + client.username;
+            
+            obj = {
+                zeit: getTime(),
+                severmsg: msg
+            };
+
+            /** Objekt in Message Log einfügen */
+            historyArray.push(obj);
+
+            /** Objekt in JSON String konvertieren */
+            json = JSON.stringify(obj);
+
+            /** Sendet an ALLE verbundenen Clienten den JSON String */
+            webSocket.sockets.emit('servermessage', json);
+            console.log( obj.zeit + ' ' + msg);
+            
 
         } else {
 
@@ -93,14 +107,22 @@ webSocket.sockets.on('connection', function(client) {
             client.username = data;
             usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
-            msg = getTime() + ' ' + client.username + ' joined the Chat';
-            webSocket.sockets.emit('servermessage', msg);
-            console.log(msg);
-
-            var obj = {
-                time: getTime(),
-                severmsg: data
+            msg = ' ' + client.username + ' joined the Chat';
+            
+            obj = {
+                zeit: getTime(),
+                severmsg: msg
             };
+
+            /** Objekt in Message Log einfügen */
+            historyArray.push(obj);
+
+            /** Objekt in JSON String konvertieren */
+            json = JSON.stringify(obj);
+
+            /** Sendet an ALLE verbundenen Clienten den JSON String */
+            webSocket.sockets.emit('servermessage', json);
+            console.log( obj.zeit + '' + msg);
 
         }
 
@@ -114,9 +136,9 @@ webSocket.sockets.on('connection', function(client) {
         data = cleanInput(data); // Input säubern
 
         var obj = {
-            time: getTime(),
+            zeit: getTime(),
             username: client.username,
-            color: client.farbe,
+            farbe: client.farbe,
             msg: data
         };
 
@@ -160,8 +182,22 @@ webSocket.sockets.on('connection', function(client) {
         console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
         
         var msg = client.username + ' left the chat.';
-        webSocket.sockets.emit('servermessage', msg);
 
+    
+        obj = {
+            zeit: getTime(),
+            severmsg: msg
+        };
+
+        /** Objekt in Message Log einfügen */
+        historyArray.push(obj);
+
+        /** Objekt in JSON String konvertieren */
+        json = JSON.stringify(obj);
+
+        /** Sendet an ALLE verbundenen Clienten den JSON String */
+        webSocket.sockets.emit('servermessage', json);
+        console.log( obj.zeit + ' ' + msg);
 
         colorArray.push(client.farbe); // Userfarbe in Array zurückgeben
         delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen

@@ -62,11 +62,13 @@
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
+                    console.log();
+
                     var obj = jQuery.parseJSON(data);
 
                     var html = '<span class="message">';
 
-                    html += '<span class="time">' + obj.time + '</span>';
+                    html += '<span class="time">' + obj.zeit + '</span>';
                     html += '<span class="username" style="color: ' + obj.color + '">' + obj.username + '</span>';
                     html += obj.msg;
 
