@@ -1,0 +1,3 @@
+{"zeit":"16:55","servermsg":"Fannon joined the Chat"}
+{"zeit":"16:55","username":"Fannon","farbe":"#F7991D","msg":"asg"}
+{"zeit":"16:55","servermsg":"Fannon changed name to Fannon"}
