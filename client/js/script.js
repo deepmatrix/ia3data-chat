@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-                $('#messages').lionbars();
+                $('messages').lionbars();
 
                 // Parameter
                 var serverurl = 'http://localhost:8000';
@@ -13,7 +13,7 @@ $(document).ready(function() {
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    username = message;
+                    username = prompt("Dein Username?","");
                     webSocket.emit('username', username);
 
                 });
@@ -25,11 +25,11 @@ $(document).ready(function() {
 
                     var html = '<span class="message">';
 
-                    html += '<span class="zeit">' + obj.zeit + '</span>';
-                    html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
+                    html += '<span class="zeit">' + obj.zeit + '</span>'+" ";
+                    html += '<span class="username" style="color: ' + obj.farbe + '">' + obj.username + '</span>' + ": ";
                     html += obj.msg;
 
-                    html += '</span>';
+                    html += '</span>' +'<br />';
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
@@ -93,7 +93,7 @@ $(document).ready(function() {
                 });
 
 
-                $('#usernameButton').bind('click', function() {
+                $('#-usernameButton').bind('click', function() {
 
                     // Nachricht auslesen
                     var username = $('#messageText').val();
