@@ -1,0 +1,2 @@
+{"zeit":"17:35","servermsg":"Fast joined the Chat"}
+{"zeit":"17:35","username":"Fast","msg":"asg"}
