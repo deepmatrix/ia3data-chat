@@ -40,7 +40,7 @@
             $(document).ready(function() {
 
                 // Parameter
-                var serverurl = 'http://92.74.119.190:8000';
+                var serverurl = 'http://localhost:8000';
                 var clientname = 'Anon';
 
                 /** Objekt dass Serverconnection herstellt und verwaltet */
@@ -132,10 +132,6 @@
                 webSocket.on('disconnect', function(data) {
                     $('#messages').append('<li>Disconnected from the server.</li>');
 
-                    if (data) {
-                        alert(data);
-                    }
-                    
                 });
 
 
