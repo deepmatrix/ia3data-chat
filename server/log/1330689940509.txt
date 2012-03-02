@@ -1,0 +1,41 @@
+{"zeit":"13:16","servermsg":"test joined the Chat"}
+{"zeit":"13:16","servermsg":"test-2 joined the Chat"}
+{"mid":1,"zeit":"13:16","username":"test-2","farbe":"#8469D4","msg":"test"}
+{"mid":2,"zeit":"13:16","username":"test-2","farbe":"#8469D4","msg":"asgasdg"}
+{"zeit":"13:16","servermsg":"Test joined the Chat"}
+{"mid":3,"zeit":"13:16","username":"test-2","farbe":"#8469D4","msg":"asg"}
+{"mid":4,"zeit":"13:16","username":"test-2","farbe":"#8469D4","msg":"asg"}
+{"mid":5,"zeit":"13:17","username":"test","farbe":"#F80E27","msg":"asdg"}
+{"zeit":"13:17","servermsg":"test left the chat."}
+{"zeit":"13:17","servermsg":"ftest joined the Chat"}
+{"zeit":"13:17","servermsg":"Test left the chat."}
+{"zeit":"13:18","servermsg":"ftest left the chat."}
+{"zeit":"13:18","servermsg":"test joined the Chat"}
+{"zeit":"13:19","servermsg":"test-2 left the chat."}
+{"zeit":"13:19","servermsg":"test-7 joined the Chat"}
+{"zeit":"13:19","servermsg":"test-7 left the chat."}
+{"zeit":"13:19","servermsg":"test-8 joined the Chat"}
+{"zeit":"13:19","servermsg":"test left the chat."}
+{"mid":6,"zeit":"13:19","username":"test-8","farbe":"#0D9FD8","msg":"asg"}
+{"zeit":"13:20","servermsg":"test joined the Chat"}
+{"zeit":"13:20","servermsg":"test-8 left the chat."}
+{"zeit":"13:20","servermsg":"Gast-10 joined the Chat"}
+{"zeit":"13:20","servermsg":"Gast-10 left the chat."}
+{"zeit":"13:20","servermsg":"test-11 joined the Chat"}
+{"zeit":"13:21","servermsg":"test-11 left the chat."}
+{"zeit":"13:21","servermsg":"asdg joined the Chat"}
+{"zeit":"13:21","servermsg":"test left the chat."}
+{"mid":7,"zeit":"13:21","username":"asdg","farbe":"#8469D4","msg":"asg"}
+{"mid":8,"zeit":"13:21","username":"asdg","farbe":"#8469D4","msg":"asg"}
+{"zeit":"13:21","servermsg":"undefined left the chat."}
+{"zeit":"13:21","servermsg":"Test joined the Chat"}
+{"zeit":"13:21","servermsg":"asdg left the chat."}
+{"zeit":"13:21","servermsg":"Test left the chat."}
+{"zeit":"13:22","servermsg":"Gast-15 joined the Chat"}
+{"zeit":"13:22","servermsg":"Gast-15 left the chat."}
+{"zeit":"13:22","servermsg":"undefined left the chat."}
+{"zeit":"13:22","servermsg":"lala joined the Chat"}
+{"zeit":"13:22","servermsg":"lala left the chat."}
+{"zeit":"13:22","servermsg":"Gast-17 joined the Chat"}
+{"zeit":"13:23","servermsg":"Gast-17 left the chat."}
+{"zeit":"13:23","servermsg":"test joined the Chat"}

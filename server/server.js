@@ -61,14 +61,22 @@ var fs = require('fs'); // Filesystem API zum schreiben der Logdateien
 // Chatserver Initialisierung ////
 //////////////////////////////////
 
+// Socket.io Konfiguration: https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
+
 /** Logging Level von Websockets reduzieren */
 webSocket.set('log level', 1);
-webSocket.set('heartbeat interval', 60);
-webSocket.enable('browser client minification');
-webSocket.enable('browser client etag');
-webSocket.enable('browser client gzip');
+
+/** Wahl und Reihenfolge der zu verwendenden Transport Protokolle */
+io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
+// Info: Opera verweigert den Dienst
+
+/** Kompression etc. */
+io.enable('browser client minification');  // send minified client
+io.enable('browser client etag');          // apply etag caching logic based on version number
+io.enable('browser client gzip');          // gzip the file
 
 // TODO: Problem Same Origin Policy noch nicht gelöst! Chrome verweigert Dienst.
+// Die Dateien auf einem Apache Server ausliefen und die URLs entsprechend anpassen löst das Problem!
 webSocket.set('origins', '*:*');
 
 

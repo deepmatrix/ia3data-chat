@@ -1,0 +1,10 @@
+{"zeit":"13:30","servermsg":"test joined the Chat"}
+{"zeit":"13:30","servermsg":"test left the chat."}
+{"zeit":"13:30","servermsg":"test joined the Chat"}
+{"zeit":"13:30","servermsg":"teasdg joined the Chat"}
+{"mid":1,"zeit":"13:30","username":"teasdg","farbe":"#F80E27","msg":"asgdasdg"}
+{"mid":2,"zeit":"13:30","farbe":"#F7991D","msg":"test"}
+{"zeit":"13:30","servermsg":"test-4 joined the Chat"}
+{"mid":3,"zeit":"13:31","username":"test","farbe":"#0D9FD8","msg":"gasdg"}
+{"mid":4,"zeit":"13:32","username":"teasdg","farbe":"#F80E27","msg":"asgd"}
+{"zeit":"13:33","servermsg":"teasdg left the chat."}
