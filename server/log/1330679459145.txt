@@ -1,0 +1,1 @@
+{"zeit":"10:11","servermsg":"Gast-1 joined the Chat"}

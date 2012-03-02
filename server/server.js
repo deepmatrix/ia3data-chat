@@ -40,6 +40,12 @@ farbArray = shuffle(farbArray); // Zufallsreihenfolge
 /** Gesamtanzahl der User */
 var userGesamt = 0;
 
+/**
+ * MessageID. Jede Usermessage hat eine eindeutige ID.
+ * So kann der Server potentiell auch die History der Clients beeinflussen.
+ */
+var mid = 0;
+
 
 //////////////////////////////////
 // Module importieren: ///////////
@@ -57,13 +63,14 @@ var fs = require('fs'); // Filesystem API zum schreiben der Logdateien
 
 /** Logging Level von Websockets reduzieren */
 webSocket.set('log level', 1);
-webSocket.set('origins', '*:*');
+webSocket.set('heartbeat interval', 60);
 webSocket.enable('browser client minification');
 webSocket.enable('browser client etag');
 webSocket.enable('browser client gzip');
 
+// TODO: Problem Same Origin Policy noch nicht gelöst! Chrome verweigert Dienst.
+webSocket.set('origins', '*:*');
 
-// TODO: Same Origin Policy nicht gelöst! Chrome verweigert Dienst.
 
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
@@ -90,8 +97,10 @@ webSocket.sockets.on('connection', function(client) {
 
     try {
 
+        // console.dir(client); // Gibt alle Client Infos aus
+
         /** Client verbindet sich neu mit Server */
-        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN.'.green);
+        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + getIP(client));
         userGesamt += 1;
 
         /** HISTORY Vergangene Chat-Einträge nachsenden */
@@ -204,12 +213,15 @@ webSocket.sockets.on('connection', function(client) {
 
         try {
 
+            mid += 1; // MessageID inkrementieren
+
             /** Eingehende Message verarbeiten */
             data = cleanInput(data); // Input säubern
 
             if (data) { // Nur wenn Daten gültig
 
             var obj = {
+                mid: mid,
                 zeit: getTime(),
                 username: client.username,
                 farbe: client.farbe,
@@ -390,4 +402,17 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+/**
+ * Hilfsfunktion die die IP Adresse und den Port des Clients ermittelt und formatiert
+ * @param  {object} client Der Client
+ * @return {string}
+ */
+function getIP(client) {
+
+    var address = '[' + client.handshake.address.address + ':' + client.handshake.address.port + ']';
+
+    return address.yellow;
+
 }
