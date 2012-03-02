@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
 // Multiuser Chat via Node.js und Socket.io       //
+// http://code.google.com/p/ia3data-chat/         //
 ////////////////////////////////////////////////////
 // Ein Projekt von Emanuel Kössel & Simon Heimler //
 // 2012 > FH Augsburg > IAM3 > ia3.Netz & Data    //
 ////////////////////////////////////////////////////
-
 
 
 //////////////////////////////////
@@ -34,7 +34,7 @@ var usersonlineSet = {};
  * Array mit Farben die Usern zufällig zugewiesen werden
  * @type {Array}
  */
-var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4'];
+var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4']; // TODO: Mehr Farben
 farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 /**
