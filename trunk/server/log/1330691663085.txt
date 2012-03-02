@@ -1,0 +1,6 @@
+{"zeit":"13:34","servermsg":"test joined the Chat"}
+{"mid":1,"zeit":"13:34","username":"test","farbe":"#8AD749","msg":"testa"}
+{"mid":2,"zeit":"13:34","username":"test","farbe":"#8AD749","msg":"asg"}
+{"mid":3,"zeit":"13:40","username":"test","farbe":"#8AD749","msg":"asdf"}
+{"zeit":"13:40","servermsg":"asdg joined the Chat"}
+{"zeit":"13:41","servermsg":"undefined left the chat."}
