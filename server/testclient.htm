@@ -3,6 +3,7 @@
         <title>Chat Client DEMO</title>
     </head>
     <body>
+        <h1>Chat Client DEMO (Servertest)</h1>
         <div>
             <p>
                 <label for="messageText">Message</label>
@@ -41,7 +42,7 @@
 
                 // Parameter
                 var serverurl = 'http://localhost:8000';
-                var clientname = 'Anon';
+                var clientname = 'Gast';
 
                 /** Objekt dass Serverconnection herstellt und verwaltet */
                 var webSocket = io.connect(serverurl);
@@ -53,13 +54,7 @@
                 webSocket.on('connect', function() {
                     
                     // Username setzen
-                    // TODO: Promt Box ersetzen!
                     username = prompt("Dein Username?","");
-
-                    // TODO: Usernamen prüfen
-                    
-                    // TODO EVTL: Prüfen ob Username schon vergeben???
-                    // webSocket.emit('permission', username);
 
                     webSocket.emit('username', username);
 
@@ -69,18 +64,6 @@
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
-                    // var obj = jQuery.parseJSON(data);
-
-                    // var html = '<span class="message">';
-
-                    // html += '<span class="zeit">' + obj.zeit + '</span>';
-                    // html += '<span class="username" style="farbe: ' + obj.farbe + '">' + obj.username + '</span>';
-                    // html += obj.msg;
-
-                    // html += '</span>';
-
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
                     $('#messages').append(data);
 
                 });
@@ -88,19 +71,12 @@
                 /** Server sendet Servermessage an Client */
                 webSocket.on('servermessage', function(data) {
 
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein
-                    
                     var msg = '<li class="servermessage">' + data + '</li>'
                     $('#messages').append(msg);
 
                 });
 
                 webSocket.on('history', function(data) {
-
-                    // TODO: JSON Array mit Objekten
-                    // Muss mit FOR schleife durchlaufen werden
-                    // Prüfung auf (servermessage), da 2 Message Typen vorhanden!
                     
                     var html = '<div class="history">' + data + '</div>'
                     $('#messages').append(html);
@@ -130,6 +106,7 @@
 
                 /** Verbindung zum Server getrennt */
                 webSocket.on('disconnect', function(data) {
+
                     $('#messages').append('<li>Disconnected from the server.</li>');
 
                 });
