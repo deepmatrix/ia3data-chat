@@ -37,14 +37,18 @@ var usersonlineSet = {};
 var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4'];
 farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
-/** Gesamtanzahl der User */
-var userGesamt = 0;
+/**
+ * UserID. Jeder User hat eine eindeutige ID.
+ * Ist auch Gesamtanzahl der User insgesamt (Aber nicht aktuell online!)
+ * So kann der Server potentiell die User verwalten (Bannen, etc.)
+ */
+var uid = 1;
 
 /**
- * MessageID. Jede Usermessage hat eine eindeutige ID.
+ * MessageID. Jede Usermessage hat eine eindeutige ID. Gesamtzahl der Messages.
  * So kann der Server potentiell auch die History der Clients beeinflussen.
  */
-var mid = 0;
+var mid = 1;
 
 
 //////////////////////////////////
@@ -52,12 +56,12 @@ var mid = 0;
 //////////////////////////////////
 
 var http = require('http').createServer(httphandler).listen(port); // HTTP Server
-var io = require('socket.io').listen(http); // http://socket.io/ "Sitzt" auf HTTP Server
-var colors = require('colors'); // Farben für die Konsole
+var io = require('socket.io').listen(http); // Transport Modul. "Sitzt" auf HTTP Server (http://socket.io/)
+var colors = require('colors'); // Farben für die Konsole (https://github.com/marak/colors.js)
 var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
 //////////////////////////////////
-// Chatserver Initialisierung ////
+// HTTPserver Initialisierung ////
 //////////////////////////////////
 
 /**
@@ -68,13 +72,16 @@ function httphandler(request, response) {
  
     console.log(getTime()  + ' SENDE CLIENT HTML.'.green);
     
-    /* */
+    /** List die Client HTML ein und gibt sie bei jeder HTTP Anfrage aus */
     fs.readFile('./testclient.htm', function(error, content) {
+        
         if (error) {
+
             response.writeHead(500);
             response.end();
-        }
-        else {
+
+        } else {
+
             response.writeHead(200, { 'Content-Type': 'text/html' });
             response.end(content, 'utf-8');
 
@@ -84,6 +91,10 @@ function httphandler(request, response) {
      
 }
 
+
+//////////////////////////////////
+// Chatserver Initialisierung ////
+//////////////////////////////////
 
 // Socket.io Konfiguration: https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
 
@@ -133,7 +144,8 @@ io.sockets.on('connection', function(client) {
 
         /** Client verbindet sich neu mit Server */
         console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + getIP(client));
-        userGesamt += 1;
+        uid += 1;
+        client.uid = uid; // Client die uid intern zuweisen
 
         /** HISTORY Vergangene Chat-Einträge nachsenden */
         client.emit('history', JSON.stringify(historyArray));
@@ -161,16 +173,18 @@ io.sockets.on('connection', function(client) {
             var obj; // JSON Object
             var json; // JSON String
 
-            if (!data || data.length < 1) { // Sonst stürzt Server ab bei leerer Eingabe.
-                data = gastname + '-' + userGesamt;
+            /** Stellt sicher dass User einen gültigen Usernamen hat falls der Client dabei fehlschlägt */
+            if (!data || data.length < 1) {
+                data = gastname + '-' + uid;
             }
 
-            data = cleanInput(data); // Input säubern
+            /** Ruft Hilfsfunktion auf, die die empfangenen Daten "säubert" */
+            data = cleanInput(data);
 
-            /* Stellt sicher dass die Usernamen eindeutig sind */
+            /** Stellt sicher dass die Usernamen eindeutig sind */
             if (data in usersonlineSet && data !== client.username ) {
                 console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.red);
-                data += '-' + userGesamt; // Eindeutige ID anhängen
+                data += '-' + uid; // Eindeutige ID anhängen
             }
 
             if (data === client.username) {
@@ -179,7 +193,7 @@ io.sockets.on('connection', function(client) {
 
             } else if (client.username){
 
-                // Client hat schon Usernamen, also ändere ihn
+                // Vorhandener User ändert seinen Namen
         
                 var alterUsername = client.username;
                 client.username = data;
@@ -248,28 +262,28 @@ io.sockets.on('connection', function(client) {
             mid += 1; // MessageID inkrementieren
 
             /** Eingehende Message verarbeiten */
-            data = cleanInput(data); // Input säubern
+            data = cleanInput(data);
 
             if (data) { // Nur wenn Daten gültig
 
-            var obj = {
-                mid: mid,
-                zeit: getTime(),
-                username: client.username,
-                farbe: client.farbe,
-                msg: data
-            };
+                var obj = {
+                    mid: mid,
+                    zeit: getTime(),
+                    username: client.username,
+                    farbe: client.farbe,
+                    msg: data
+                };
 
-            console.log(getTime() + ' ' + client.username + ': ' + data);
+                console.log(getTime() + ' ' + client.username + ': ' + data);
 
-            /** Objekt in Message Log einfügen */
-            historyArray.add(obj);
+                /** Objekt in Message Log einfügen */
+                historyArray.add(obj);
 
-            /** Objekt in JSON String konvertieren */
-            var json = JSON.stringify(obj);
+                /** Objekt in JSON String konvertieren */
+                var json = JSON.stringify(obj);
 
-            /** Sendet an ALLE verbundenen Clienten den JSON String */
-            io.sockets.emit('message', json);
+                /** Sendet an ALLE verbundenen Clienten den JSON String */
+                io.sockets.emit('message', json);
 
             } else {
 
@@ -285,14 +299,12 @@ io.sockets.on('connection', function(client) {
             client.disconnect('FEHLER!');
 
         }
-
-        
-
     });
 
     /**
      * Client fragt an welche User online sind
-     * Sendet Array mit aktuellen Usern zurück, aber nur den Client der angefragt hat
+     * Sendet Array mit aktuellen Usern zurück, aber nur an den Client der angefragt hat
+     * Wird nicht in History gespeichert.
      */
     client.on('usersonline', function() {
 
