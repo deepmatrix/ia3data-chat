@@ -13,7 +13,7 @@
 
 process.title = 'Node.js Chat'; // Prozess-Titel
 var port = 8000; // Server Port
-var historysize = 10; // Länge der History im Arbeitsspeicher
+var historysize = 10; // Länge der History (Array) im Arbeitsspeicher
 var gastname = 'Gast'; // Nur für Ausnahmefälle nötig
 
 /**
@@ -51,20 +51,44 @@ var mid = 0;
 // Module importieren: ///////////
 //////////////////////////////////
 
-var webSocket = require('socket.io').listen(port); // http://socket.io/
+var http = require('http').createServer(httphandler).listen(port); // HTTP Server
+var io = require('socket.io').listen(http); // http://socket.io/ "Sitzt" auf HTTP Server
 var colors = require('colors'); // Farben für die Konsole
-var fs = require('fs'); // Filesystem API zum schreiben der Logdateien
-
-
+var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
 //////////////////////////////////
 // Chatserver Initialisierung ////
 //////////////////////////////////
 
+/**
+ * Nimmt HTTP Anfragen entgegen und liefert den Client in HTML zurück
+ * Socket.IO ist an den HTTP Server gebunden
+ */
+function httphandler(request, response) {
+ 
+    console.log(getTime()  + ' SENDE CLIENT HTML.'.green);
+    
+    /* */
+    fs.readFile('./testclient.htm', function(error, content) {
+        if (error) {
+            response.writeHead(500);
+            response.end();
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': 'text/html' });
+            response.end(content, 'utf-8');
+
+            console.log(getTime() + ' FEHLER BEIM SENDEN DES CLIENTS'.red);
+        }
+    });
+     
+}
+
+
 // Socket.io Konfiguration: https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
 
 /** Logging Level von Websockets reduzieren */
-webSocket.set('log level', 1);
+io.set('log level', 1);
 
 /** Wahl und Reihenfolge der zu verwendenden Transport Protokolle */
 io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
@@ -77,7 +101,7 @@ io.enable('browser client gzip');          // gzip the file
 
 // TODO: Problem Same Origin Policy noch nicht gelöst! Chrome verweigert Dienst.
 // Die Dateien auf einem Apache Server ausliefen und die URLs entsprechend anpassen löst das Problem!
-webSocket.set('origins', '*:*');
+io.set('origins', '*:*');
 
 
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
@@ -101,7 +125,7 @@ try {
 //////////////////////////////////
 
 /** Client verbindet sich mit Server */
-webSocket.sockets.on('connection', function(client) {
+io.sockets.on('connection', function(client) {
 
     try {
 
@@ -176,7 +200,7 @@ webSocket.sockets.on('connection', function(client) {
                 json = JSON.stringify(obj);
 
                 /** Sendet an ALLE verbundenen Clienten den JSON String */
-                webSocket.sockets.emit('servermessage', json);
+                io.sockets.emit('servermessage', json);
                 console.log(obj.zeit + ' ' + msg);
                 
 
@@ -201,7 +225,7 @@ webSocket.sockets.on('connection', function(client) {
                 json = JSON.stringify(obj);
 
                 /** Sendet an ALLE verbundenen Clienten den JSON String */
-                webSocket.sockets.emit('servermessage', json);
+                io.sockets.emit('servermessage', json);
                 console.log(obj.zeit + ' ' + msg);
 
             }
@@ -245,7 +269,7 @@ webSocket.sockets.on('connection', function(client) {
             var json = JSON.stringify(obj);
 
             /** Sendet an ALLE verbundenen Clienten den JSON String */
-            webSocket.sockets.emit('message', json);
+            io.sockets.emit('message', json);
 
             } else {
 
@@ -303,7 +327,7 @@ webSocket.sockets.on('connection', function(client) {
         
         try {
 
-            console.log(getTime() + ' CLIENT ABGEMELDET.'.green);
+            console.log(getTime() + ' CLIENT ABGEMELDET.'.green + getIP(client));
             
             var msg = client.username + ' left the chat.';
         
@@ -319,7 +343,7 @@ webSocket.sockets.on('connection', function(client) {
             json = JSON.stringify(obj);
 
             /** Sendet an ALLE verbundenen Clienten den JSON String */
-            webSocket.sockets.emit('servermessage', json);
+            io.sockets.emit('servermessage', json);
             console.log( obj.zeit + ' ' + msg);
 
             delete usersonlineSet[client.username]; // Usernamen aus Useronline Set streichen
