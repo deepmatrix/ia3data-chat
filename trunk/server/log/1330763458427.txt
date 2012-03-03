@@ -1,0 +1,8 @@
+{"zeit":"09:33","servermsg":"undefined left the chat."}
+{"zeit":"09:35","servermsg":"Gast-4 joined the Chat"}
+{"zeit":"09:43","servermsg":"Gast-4 left the chat."}
+{"zeit":"09:43","servermsg":"test joined the Chat"}
+{"mid":2,"zeit":"09:43","username":"test","farbe":"#8AD749","msg":"asg"}
+{"zeit":"09:43","servermsg":"test left the chat."}
+{"zeit":"09:43","servermsg":"Gast-6 joined the Chat"}
+{"zeit":"09:43","servermsg":"Gast-6 left the chat."}

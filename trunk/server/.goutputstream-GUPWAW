@@ -383,15 +383,8 @@ io.sockets.on('connection', function(client) {
 function getTime() {
     var currentTime = new Date();
 
-    /** Sorgt dafür dass die Zahl immer zweistellig ist */
-    function volle(zeit) {
-
-        if (zeit > 9) {
-            return zeit;
-        } else {
-            return "0" + zeit;
-        }
-
+	/** Sorgt dafür dass die Zahl immer zweistellig ist */
+    function volle(Value) {
         return (Value > 9) ? "" + Value : "0" + Value;
     }
 

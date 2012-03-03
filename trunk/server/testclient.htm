@@ -39,9 +39,10 @@
         </style>
         
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
-        <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+        
         <script>
-            $(document).ready(function() {
+
+            $(function() {
 
             // Parameter
             var serverurl = 'http://localhost:8000';
@@ -53,6 +54,10 @@
             /** Lösche Message Box bei Browser-Aktualisierung */
             $('#messages').text('');
 
+            /** Deaktiviere Eingabe bis Connection und Username gesetzt sind */
+            $('button').attr('disabled', true);
+            console.log('Button AUS');
+
             /** Server Verbindung wird erstmalig hergestellt */
             webSocket.on('connect', function() {
                 
@@ -61,6 +66,10 @@
 
                 webSocket.emit('username', username);
 
+                // Schalte Input und Buttons frei
+                
+                console.log('Button EIN');
+                $('button').attr('disabled', false);
 
             });
 
@@ -112,6 +121,8 @@
 
                 $('#messages').append('<li>Disconnected from the server.</li>');
 
+                $('button').attr('disabled', true);
+
             });
 
 
@@ -160,5 +171,6 @@
 
 
         </script>
+        <script src="http://localhost:8000/socket.io/socket.io.js"></script>
     </body>
 </html>
