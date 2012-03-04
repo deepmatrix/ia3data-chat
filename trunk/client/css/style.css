@@ -253,7 +253,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 #eingaben{
 	margin:10px;
-	height:55px;
+	height:40px;
 }
 
 #messages{
@@ -272,8 +272,8 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 #nachrichtenEingabe{
 	margin:3px 0px 0px 0px;
-	height:44px;
-	width:200px;
+	height:24px;
+	width:186px;
 	overflow:auto;
 	overflow-x:hidden;
 	resize: none;
@@ -282,14 +282,26 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 /* SPRITE BUTTON */
 
-a.usernameButton {
+a.userNameButton {
 	float:left;
 	background: url(../img/Buttons_Chat_chat_to_profile.png) no-repeat 0 0;
-	width: 50px;
-	height: 50px;
+	width: 30px;
+	height: 30px;
 	display: block;
 	text-indent: -9999px;
-	margin:3px 5px 0px 10px;
+	margin:3px 2px 0px 10px;
 }
 
-a.usernameButton:hover { background-position: 0 -50px; }
+a.userNameButton:hover { background-position: 0 -30px; }
+
+a.userListButton {
+	float:left;
+	background: url(../img/Buttons_Chat_chat_to_userlist.png) no-repeat 0 0;
+	width: 30px;
+	height: 30px;
+	display: block;
+	text-indent: -9999px;
+	margin:3px 5px 0px 2px;
+}
+
+a.userListButton:hover { background-position: 0 -30px; }
