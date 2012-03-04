@@ -12,8 +12,10 @@ $(document).ready(function() {
                 /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
                     
+                    $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
+
                     // Username setzen
-                    username = prompt("Dein Username?","");
+                    username = $('#nachrichtenEingabe').val();
                     webSocket.emit('username', username);
 
                 });
@@ -86,7 +88,7 @@ $(document).ready(function() {
                         webSocket.send(message);
             
                         // Textbox leeren
-                        $('#nachrichtenEingabe').val('');
+                        $('#nachrichtenEingabe').val("");
                     
                     }
 
