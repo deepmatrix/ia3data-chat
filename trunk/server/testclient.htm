@@ -10,8 +10,7 @@
         <h3>Gibt nur die JSON Strings aus, ohne Formatierung!</h3>
         <div>
             <p>
-                <label for="messageText">Message</label>
-                <input type="text" id="messageText"/>
+                <input type="text" id="messageText"/ size="35" >
             </p>
             <p>
                 <button id="sendButton">Senden</button>
@@ -56,7 +55,6 @@
 
             /** Deaktiviere Eingabe bis Connection und Username gesetzt sind */
             $('button').attr('disabled', true);
-            console.log('Button AUS');
 
             /** Server Verbindung wird erstmalig hergestellt */
             webSocket.on('connect', function() {
@@ -67,8 +65,6 @@
                 webSocket.emit('username', username);
 
                 // Schalte Input und Buttons frei
-                
-                console.log('Button EIN');
                 $('button').attr('disabled', false);
 
             });
@@ -76,7 +72,9 @@
             /** Server sendet Nachricht an Client */
             webSocket.on('message', function(data) {
 
-                $('#messages').append(data);
+                var msg = '<li class="message">' + data + '</li>';
+
+                $('#messages').append(msg);
 
             });
 
@@ -90,7 +88,7 @@
 
             webSocket.on('history', function(data) {
                 
-                var html = '<div class="history">' + data + '</div>';
+                var html = '<li class="history">' + data + '</li>';
                 $('#messages').append(html);
 
             });
@@ -100,16 +98,16 @@
                 console.log(data);
                 var obj = jQuery.parseJSON(data);
 
-                var html = '<span class="usersonline">';
+                var html = '<li class="usersonline">';
 
                 for (var o in obj) {
 
                     // Für jeden Datensatz eine Row
-                    html += '<li>' + obj[o] + '</li>';
+                    html += obj[o] + ', ';
 
                 }
 
-                html += '</span>';
+                html += '</li>';
                 
                 $('#messages').append(html);
 

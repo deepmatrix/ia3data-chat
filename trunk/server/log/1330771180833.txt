@@ -1,0 +1,7 @@
+{"zeit":"11:39","servermsg":"Fannon joined the Chat"}
+{"mid":2,"zeit":"11:40","username":"Fannon","farbe":"#0D9FD8","msg":"Test"}
+{"mid":3,"zeit":"11:40","username":"Fannon","farbe":"#0D9FD8","msg":"test"}
+{"zeit":"11:40","servermsg":"Emi joined the Chat"}
+{"mid":4,"zeit":"11:40","username":"Emi","farbe":"#F80E27","msg":"east"}
+{"mid":5,"zeit":"11:40","username":"Emi","farbe":"#F80E27","msg":"d"}
+{"zeit":"11:42","servermsg":"Emi left the chat."}
