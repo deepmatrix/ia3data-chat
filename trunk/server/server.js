@@ -11,10 +11,11 @@
 // Parameter und Variablen: //////
 //////////////////////////////////
 
-process.title = 'Node.js Chat'; // Prozess-Titel
+process.title = 'Node.js Chat Server'; // Prozess-Titel
 var port = 8000; // Server Port
-var historysize = 10; // Länge der History (Array) im Arbeitsspeicher
-var gastname = 'Gast'; // Nur für Ausnahmefälle nötig
+var historysize = 25; // Länge der History im Arbeitsspeicher (Array)
+var gastname = 'Gast'; // Nur in Ausnahmefällen nötig
+var DEBUG = false; // Schaltet DEBUG Modus an oder aus
 
 /**
  * Messagehistory Log
@@ -75,7 +76,7 @@ function httphandler(request, response) {
     /** List die Client HTML ein und gibt sie bei jeder HTTP Anfrage aus */
     fs.readFile('./testclient.htm', function(error, content) {
 
-        // TODO: Liefert nur testclient aus!
+        // TODO: Liefert aktuell nur Testclient aus!
         
         if (error) {
 
@@ -103,6 +104,7 @@ function httphandler(request, response) {
 
 /** Logging Level von Websockets reduzieren */
 io.set('log level', 1);
+if (DEBUG) { io.set('log level', 3);}
 
 /** Wahl und Reihenfolge der zu verwendenden Transport Protokolle */
 io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
@@ -143,7 +145,9 @@ io.sockets.on('connection', function(client) {
 
     try {
 
-        // console.dir(client); // Gibt alle Client Infos aus
+        if (DEBUG) { console.dir(io.sockets);} // Gibt alle Client Infos aus
+
+        if (DEBUG) { console.dir(client);} // Gibt alle Client Infos aus
 
         /** Client verbindet sich neu mit Server */
         console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + getIP(client));
@@ -168,6 +172,10 @@ io.sockets.on('connection', function(client) {
 
 
     /** Client sendet seinen Usernamen */
+
+    //
+    //
+    //
     client.on('username', function(data) {
 
         try {
@@ -184,7 +192,10 @@ io.sockets.on('connection', function(client) {
             /** Ruft Hilfsfunktion auf, die die empfangenen Daten "säubert" */
             data = cleanInput(data);
 
-            /** Stellt sicher dass die Usernamen eindeutig sind */
+            /**
+             * Stellt sicher dass die Usernamen eindeutig sind
+             * Falls Username schon vorhanden, hänge UserID an.
+             */
             if (data in usersonlineSet && data !== client.username ) {
                 console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.yellow);
                 data += '-' + uid; // Eindeutige ID anhängen
@@ -371,6 +382,29 @@ io.sockets.on('connection', function(client) {
         }
 
     });
+
+    ///////////////////////////////////
+    // ZUKÜNFTIG MÖGLICHE FUNKTIONEN //
+    ///////////////////////////////////
+
+    /** Client für Moderation authentifizieren */
+    client.on('auth', function(data) {
+        client.auth = true;
+    });
+
+    /** MODERATION: Löscht einzelne Messages nach ID oder gesamte History aller Clients */
+    client.on('clear', function(data) {});
+
+    /**
+     * MODERATION: Bannt Clienten vom Chatroom. Initiiert von Moderator Client
+     * Eventuell dann sinnvoll uid an messages anzufügen
+     * um alle Messages eines Users löschen zu können
+    */
+    client.on('ban', function(data) {});
+
+    /** MODERATION: Chatroom schließen / öffnen */
+    client.on('ban', function(data) {});
+
 
 });
 
