@@ -70,22 +70,25 @@ var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben d
  */
 function httphandler(request, response) {
  
-    console.log(getTime()  + ' SENDE CLIENT HTML.'.green);
+    console.log(getTime()  + ' LIEFERE CLIENT HTML.'.green);
     
     /** List die Client HTML ein und gibt sie bei jeder HTTP Anfrage aus */
     fs.readFile('./testclient.htm', function(error, content) {
+
+        // TODO: Liefert nur testclient aus!
         
         if (error) {
 
             response.writeHead(500);
             response.end();
 
+            console.log(getTime() + ' FEHLER BEIM SENDEN DES CLIENTS'.red);
+            console.log(getTime() + error.toString());
+
         } else {
 
             response.writeHead(200, { 'Content-Type': 'text/html' });
             response.end(content, 'utf-8');
-
-            console.log(getTime() + ' FEHLER BEIM SENDEN DES CLIENTS'.red);
         }
     });
      
@@ -131,9 +134,9 @@ try {
 }
 
 
-//////////////////////////////////
-// Server Logik (via Socket.io) //
-//////////////////////////////////
+////////////////////////////////////////
+// Server Transport Logik (Socket.io) //
+////////////////////////////////////////
 
 /** Client verbindet sich mit Server */
 io.sockets.on('connection', function(client) {
@@ -183,7 +186,7 @@ io.sockets.on('connection', function(client) {
 
             /** Stellt sicher dass die Usernamen eindeutig sind */
             if (data in usersonlineSet && data !== client.username ) {
-                console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.red);
+                console.log(getTime()  + ' USERNAME SCHON VORHANDEN'.yellow);
                 data += '-' + uid; // Eindeutige ID anhängen
             }
 
@@ -392,7 +395,6 @@ function getTime() {
             return "0" + zeit;
         }
 
-        return (Value > 9) ? "" + Value : "0" + Value;
     }
 
     return '' + volle(currentTime.getHours()) + ':' + volle(currentTime.getMinutes());
@@ -458,7 +460,7 @@ function shuffle(array) {
 
 /**
  * Hilfsfunktion die die IP Adresse und den Port des Clients ermittelt und formatiert
- * @param  {object} client Der Client
+ * @param  {object} client Der spezifische Client
  * @return {string}
  */
 function getIP(client) {
