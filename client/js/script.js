@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-                $('messages').lionbars();
+                
 
                 // Parameter
                 var serverurl = 'http://localhost:8000';
@@ -19,6 +19,9 @@ $(document).ready(function() {
                     webSocket.emit('username', username);
 
                 });
+
+                // $('#messages').lionbars();
+                // TODO: Lionbars kommt mit interaktivem Inhalt nicht klar!
 
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
@@ -49,7 +52,7 @@ $(document).ready(function() {
                     
                     var msg = '<li class="zeit" style="color:#00AA00">' + obj.zeit + " ";
 
-                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</li>'
+                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</li>';
 
                     $('#messages').append(msg);
 
@@ -64,7 +67,7 @@ $(document).ready(function() {
 
                     var msg = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
 
-                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>'
+                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';
 
                     // TODO
                     $('#messages').append(msg);
@@ -74,7 +77,7 @@ $(document).ready(function() {
                 webSocket.on('usersonline', function(data) {
 
                     // TODO
-                    var msg = '<span class="usersonline">' + data + '</span>'
+                    var msg = '<span class="usersonline">' + data + '</span>';
                     $('#messages').append(msg);
 
                 });
@@ -91,13 +94,15 @@ $(document).ready(function() {
 
                     
                     // Enter abfragen
-                    if(e.keyCode == '13') {
+                    if(e.which == 13 || e.keyCode == 13) {
                         
                         // Nachricht auslesen
                         var message = $('#nachrichtenEingabe').val();
         
                         // Textbox leeren
-                        $('#nachrichtenEingabe').val('');
+                        setTimeout(function() { // Fixt das doppelte Enter
+                            $('#nachrichtenEingabe').val('');
+                        }, 3);
         
                         // Nachricht versenden
                         webSocket.send(message);
@@ -116,6 +121,7 @@ $(document).ready(function() {
                     var username = $('#messageText').val();
 
                     if (username) {
+
                         // Nachricht versenden
                         webSocket.emit('username', username);
             

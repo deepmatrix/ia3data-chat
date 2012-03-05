@@ -1,3 +1,0 @@
-{"zeit":"09:42","servermsg":"test joined the Chat"}
-{"zeit":"09:42","servermsg":"test left the chat."}
-{"zeit":"09:43","servermsg":"test joined the Chat"}
