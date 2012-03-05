@@ -96,11 +96,11 @@ $(document).ready(function() {
                         // Nachricht auslesen
                         var message = $('#nachrichtenEingabe').val();
         
+                        // Textbox leeren
+                        $('#nachrichtenEingabe').val('');
+        
                         // Nachricht versenden
                         webSocket.send(message);
-            
-                        // Textbox leeren
-                        $('#nachrichtenEingabe').val("");
                     
                     }
 
