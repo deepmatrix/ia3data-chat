@@ -47,15 +47,27 @@ $(document).ready(function() {
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
                     
-                    var msg = '<li class="servermessage">' + obj.msg + '</li>'
+                    var msg = '<li class="zeit" style="color:#00AA00">' + obj.zeit + " ";
+
+                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</li>'
+
                     $('#messages').append(msg);
 
                 });
 
                 webSocket.on('history', function(data) {
 
+                    var obj = jQuery.parseJSON(data);
+
+                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
+                    // Wird dann JSON Datei sein!
+
+                    var msg = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
+
+                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>'
+
                     // TODO
-                    $('#messages').append(data);
+                    $('#messages').append(msg);
 
                 });
 
@@ -95,7 +107,10 @@ $(document).ready(function() {
                 });
 
 
-                $('#-usernameButton').bind('click', function() {
+                $('.userNameButton').bind('click', function() {
+
+                    // Info ausgeben
+                    $('#messages').append('<li>Geben Sie Ihren neuen Benutzernamen ein:</li>');
 
                     // Nachricht auslesen
                     var username = $('#messageText').val();
@@ -106,6 +121,7 @@ $(document).ready(function() {
             
                         // Textbox leeren
                         $('#messageText').val('');
+
                     }
 
                     
@@ -113,7 +129,10 @@ $(document).ready(function() {
 
 
 
-                $('#userButton').bind('click', function() {
+                $('.userListButton').bind('click', function() {
+
+                    // Info ausgeben
+                    $('#messages').append('<li>Im Chat befinden sich derzeit:</li>');
 
                     // Nachricht versenden
                     webSocket.emit('usersonline', { my: 'data' });
