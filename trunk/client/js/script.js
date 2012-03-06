@@ -6,6 +6,12 @@ $(document).ready(function() {
                 var serverurl = 'http://localhost:8000';
                 var clientname = 'Anon';
 
+                /** Lösche Message Box bei Browser-Aktualisierung */
+                $('#messages').text('');
+
+                /** Deaktiviere Eingabe bis Connection und Username gesetzt sind */
+                $('button').attr('disabled', true);
+
                 /** Objekt dass Serverconnection herstellt und verwaltet */
                 var webSocket = io.connect(serverurl);
 
@@ -14,9 +20,29 @@ $(document).ready(function() {
                     
                     $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
 
-                    // Username setzen
-                    username = $('#nachrichtenEingabe').val();
-                    webSocket.emit('username', username);
+                    $('#nachrichtenEingabe').keypress (function(e) {
+
+                    
+                    // Enter abfragen
+                    if(e.which == 13 || e.keyCode == 13) {
+                        
+                        // Nachricht auslesen
+                        var username = $('#nachrichtenEingabe').val();
+        
+                        // Textbox leeren
+                        setTimeout(function() { // Fixt das doppelte Enter
+                            $('#nachrichtenEingabe').val('');
+                        }, 3);
+        
+                        // Nachricht versenden
+                        webSocket.emit('username', username);
+
+                    // Schalte Input und Buttons frei
+                    //$('button').attr('disabled', false);
+
+                    }
+
+                });
 
                 });
 
@@ -65,20 +91,42 @@ $(document).ready(function() {
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
 
-                    var msg = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
+                    var html = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
 
-                    msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';
+                    html += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';
 
                     // TODO
-                    $('#messages').append(msg);
+                    $('#messages').append(data);
+                    
 
                 });
 
                 webSocket.on('usersonline', function(data) {
 
+                    //TODO: Anzahl der Chatuser vor auflistung
+                    // Info ausgeben
+                    $('#messages').append('<li>Im Chat befinden sich derzeit:</li>');
+
+                    var obj = jQuery.parseJSON(data);
+
+                    var html = '<span class="usersonline">';
+
+                    for (var o in obj) {
+
+                        // Für jeden Datensatz eine Row
+                        html += obj[o] + ', ';
+
+                    }
+
+                    html += '</span>';
+                
+                    $('#messages').append(html);
+
+                    /*
                     // TODO
                     var msg = '<span class="usersonline">' + data + '</span>';
                     $('#messages').append(msg);
+                    */
 
                 });
 
@@ -117,6 +165,28 @@ $(document).ready(function() {
                     // Info ausgeben
                     $('#messages').append('<li>Geben Sie Ihren neuen Benutzernamen ein:</li>');
 
+                    $('#nachrichtenEingabe').keypress (function(e) {
+
+                    
+                    // Enter abfragen
+                    if(e.which == 13 || e.keyCode == 13) {
+                        
+                        // Nachricht auslesen
+                        var username = $('#nachrichtenEingabe').val();
+        
+                        // Textbox leeren
+                        setTimeout(function() { // Fixt das doppelte Enter
+                            $('#nachrichtenEingabe').val('');
+                        }, 3);
+        
+                        // Nachricht versenden
+                        webSocket.emit('username', username);
+                    
+                    }
+
+                });
+
+                    /*
                     // Nachricht auslesen
                     var username = $('#messageText').val();
 
@@ -129,6 +199,7 @@ $(document).ready(function() {
                         $('#messageText').val('');
 
                     }
+                    */
 
                     
                 });
@@ -136,9 +207,6 @@ $(document).ready(function() {
 
 
                 $('.userListButton').bind('click', function() {
-
-                    // Info ausgeben
-                    $('#messages').append('<li>Im Chat befinden sich derzeit:</li>');
 
                     // Nachricht versenden
                     webSocket.emit('usersonline', { my: 'data' });
