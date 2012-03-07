@@ -91,15 +91,28 @@ $(document).ready(function() {
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
 
-                    var html = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
+                    /*var html = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
 
-                    html += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';
+                    html += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';*/
 
+                    $.each(obj, function(key, value) {alert( "The key is '" + key + "' and the value is '" + value + "'" );
+                    });
                     // TODO
-                    $('#messages').append(data);
-                    
+                    //$('#messages').append(data);
 
                 });
+                
+
+                /*webSocket.on('history', function(data) {
+
+                    var obj = jQuery.parseJSON(data);
+                
+                    var msg = '<li class="zeit">' + data + '</li>';
+                    
+                    $('#messages').append(msg);
+
+                });
+                */
 
                 webSocket.on('usersonline', function(data) {
 
