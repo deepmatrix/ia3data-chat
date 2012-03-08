@@ -1,0 +1,9 @@
+{"zeit":"11:17","servermsg":"Fannon joined the Chat"}
+{"mid":2,"zeit":"11:17","username":"Fannon","farbe":"#F80E27","msg":"Testnachricht"}
+{"mid":3,"zeit":"11:17","username":"Fannon","farbe":"#F80E27","msg":"Lade neuen User ein"}
+{"zeit":"11:17","servermsg":"Emi joined the Chat"}
+{"mid":4,"zeit":"11:18","username":"Emi","farbe":"#8469D4","msg":"Drei Chinesen mit dem Kontrabass saßen auf der Straße und erzählten sich was. Da kam die Polizei, ei was ist denn das? Drei Chinesen mit dem Kontrabass."}
+{"zeit":"11:18","servermsg":"Emi changed name to Basti"}
+{"zeit":"11:33","servermsg":"Test joined the Chat"}
+{"mid":5,"zeit":"11:33","username":"Test","farbe":"#F7991D","msg":"asg"}
+{"zeit":"11:58","servermsg":"Test left the chat."}

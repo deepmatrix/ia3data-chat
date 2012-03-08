@@ -16,6 +16,7 @@ var port = 8000; // Server Port
 var historysize = 25; // Länge der History im Arbeitsspeicher (Array)
 var gastname = 'Gast'; // Nur in Ausnahmefällen nötig
 var DEBUG = false; // Schaltet DEBUG Modus an oder aus
+var FILELOG = true; // Schaltet das Schreiben der Logdateien ins Dateisystem an oder aus
 
 /**
  * Messagehistory Log
@@ -74,7 +75,7 @@ function httphandler(request, response) {
     console.log(getTime()  + ' LIEFERE CLIENT HTML.'.green);
     
     /** List die Client HTML ein und gibt sie bei jeder HTTP Anfrage aus */
-    fs.readFile('./testclient.htm', function(error, content) {
+    fs.readFile(__dirname + '/client/testclient.htm', function(error, content) {
 
         // TODO: Liefert aktuell nur Testclient aus!
         
@@ -106,6 +107,11 @@ function httphandler(request, response) {
 io.set('log level', 1);
 if (DEBUG) { io.set('log level', 3);}
 
+/** Timeouts weniger aggressiv einstellen: */
+io.set('close timeout', 120);
+io.set('heartbeat timeout', 120);
+io.set('heartbeat interval', 30);
+
 /** Wahl und Reihenfolge der zu verwendenden Transport Protokolle */
 io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
 // Info: Opera verweigert den Dienst
@@ -123,18 +129,19 @@ io.set('origins', '*:*');
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
-try {
+if (FILELOG) {
+    try {
 
-    var logfile = fs.createWriteStream("./log/" + new Date().getTime() + ".txt",
-    {flags: "a", encoding: "utf-8"});
+        var logfile = fs.createWriteStream(__dirname + '/log/' + new Date().getTime() + ".txt",
+        {flags: "a", encoding: "utf-8"});
 
-} catch(e) {
+    } catch(e) {
 
-    console.log(getTime() + ' FEHLER BEIM ERSTELLEN DER LOGDATEI'.red);
-    console.log(getTime() + ' ' + e + ''.red);
+        console.log(getTime() + ' FEHLER BEIM ERSTELLEN DER LOGDATEI'.red);
+        console.log(getTime() + ' ' + e + ''.red);
 
+    }
 }
-
 
 ////////////////////////////////////////
 // Server Transport Logik (Socket.io) //
@@ -142,6 +149,11 @@ try {
 
 /** Client verbindet sich mit Server */
 io.sockets.on('connection', function(client) {
+
+
+    // TODO: Bei kurzem Verbindungsabbruch wäre es besser,
+    // man könnte die verlorene Session einfach fortsetzen.
+    // Sonst muss man sich jedesmal neu einloggen.
 
     try {
 
@@ -403,7 +415,7 @@ io.sockets.on('connection', function(client) {
     client.on('ban', function(data) {});
 
     /** MODERATION: Chatroom schließen / öffnen */
-    client.on('ban', function(data) {});
+    client.on('open', function(data) {});
 
 
 });
@@ -441,20 +453,25 @@ function getTime() {
  */
 historyArray.add = function(json) {
 
-    // Schreibt Logdatei auf Server
-    // TODO: Überschreibt alte Logdateien!
-    try {
+    // Fügt Eintrag in der erstellte Logdatei (Filesystem) an.
+    // Hier werden keine Einträge gelöscht -> Archiv!
+    if (FILELOG) {
+        try {
 
-        logfile.write(JSON.stringify(json) + '\n');
-    } catch(e) {
+            logfile.write(JSON.stringify(json) + '\n');
 
-        console.log(getTime() + ' FEHLER BEIM SCHREIBEN DER LOGDATEI'.red);
-        console.log(getTime() + ' ' + e);
+        } catch(e) {
 
+            console.log(getTime() + ' FEHLER BEIM SCHREIBEN DER LOGDATEI'.red);
+            console.log(getTime() + ' ' + e);
+
+        }
     }
-
+    
+    // Füge JSON in Array ein
     this.push(json);
 
+    // Falls die History die Historysize übersteigt, lösche ältesten Eintrag
     if (this.length > historysize) {
         this.shift(); // Performance?
     }

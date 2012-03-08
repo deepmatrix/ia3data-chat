@@ -1,0 +1,4 @@
+{"zeit":"12:11","servermsg":"Test joined the Chat"}
+{"mid":2,"zeit":"12:11","username":"Test","farbe":"#F7991D","msg":"asgadg"}
+{"mid":3,"zeit":"12:11","username":"Test","farbe":"#F7991D","msg":"asdgasg"}
+{"mid":4,"zeit":"12:12","username":"Test","farbe":"#F7991D","msg":"logtest"}
