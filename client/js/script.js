@@ -7,6 +7,8 @@ $(document).ready(function() {
 
                 var clientname = 'Anon';
 
+                var chatstatus;
+
                 /** Lösche Message Box bei Browser-Aktualisierung */
                 $('#messages').text('');
 
@@ -18,33 +20,11 @@ $(document).ready(function() {
 
                 /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
-                    
+
+                    chatstatus = 0;
+            
                     //Text ausgeben
                     $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
-
-                    $('#nachrichtenEingabe').keypress (function(e) {
-
-                    
-                        // Enter abfragen
-                        if(e.which == 13 || e.keyCode == 13) {
-                            
-                            // Nachricht auslesen
-                            var username = $('#nachrichtenEingabe').val();
-            
-                            // Textbox leeren
-                            setTimeout(function() { // Fixt das doppelte Enter
-                                $('#nachrichtenEingabe').val('');
-                            }, 3);
-            
-                            // Nachricht versenden
-                            webSocket.emit('username', username);
-
-                        // Schalte Input und Buttons frei
-                        //$('button').attr('disabled', false);
-
-                        }
-
-                    });
 
                 });
 
@@ -144,59 +124,17 @@ $(document).ready(function() {
                 });
 
 
-                /** Event-Handler: Enter Button */
-                $('#nachrichtenEingabe').keypress (function(e) {
-
-                    // Enter abfragen
-                    if(e.which == 13 || e.keyCode == 13) {
-                        
-                        // Nachricht auslesen
-                        var message = $('#nachrichtenEingabe').val();
-        
-                        // Textbox leeren
-                        setTimeout(function() { // Fixt das doppelte Enter
-
-                            $('#nachrichtenEingabe').val('');
-                        
-                        }, 3);
-        
-                        // Nachricht versenden
-                        webSocket.send(message);
-                    
-                    }
-
-                });
-
 
                 //nach Klick auf Button: Benutzername ändern
                 $('.userNameButton').bind('click', function() {
 
+                    chatstatus = 0;
+
                     // Info ausgeben
                     $('#messages').append('<li>Geben Sie Ihren neuen Benutzernamen ein:</li>');
-
-                    /** Event-Handler: Enter Button */
-                    $('#nachrichtenEingabe').keypress (function(e) {
-
-                    
-                        // Enter abfragen
-                        if(e.which == 13 || e.keyCode == 13) {
-                            
-                            // Nachricht auslesen
-                            var username = $('#nachrichtenEingabe').val();
-            
-                            // Textbox leeren
-                            setTimeout(function() { // Fixt das doppelte Enter
-                                $('#nachrichtenEingabe').val('');
-                            }, 3);
-            
-                            // Nachricht versenden
-                            webSocket.emit('username', username);
-                        
-                        }
-
-                    });
                     
                 });
+
 
 
                 //nach Klick auf Button: Angemeldete Benutzer ausgeben
@@ -204,6 +142,60 @@ $(document).ready(function() {
 
                     // Nachricht versenden
                     webSocket.emit('usersonline', { my: 'data' });
+
+                    chatstatus = 1;
+
+                });
+
+                /** Event-Handler: Enter Button */
+                $('#nachrichtenEingabe').keypress (function(e) {
+
+                    
+                    // Enter abfragen
+                    if(e.which == 13 || e.keyCode == 13) {
+
+                        if(chatstatus == 0) {
+                            
+                            // Nachricht auslesen
+                            var username = $('#nachrichtenEingabe').val();
+                
+                            // Textbox leeren
+                            setTimeout(function() { // Fixt das doppelte Enter
+
+                                $('#nachrichtenEingabe').val('');
+                            
+                            }, 3);
+                
+                            // Nachricht versenden
+                            webSocket.emit('username', username);
+
+                            chatstatus = 1;
+
+                        }
+
+                        else if(chatstatus == 1) {
+
+                            // Nachricht auslesen
+                            var message = $('#nachrichtenEingabe').val();
+        
+                            // Textbox leeren
+                            setTimeout(function() { // Fixt das doppelte Enter
+
+                                $('#nachrichtenEingabe').val('');
+                        
+                            }, 3);
+        
+                            // Nachricht versenden
+                            webSocket.send(message);
+
+                        }
+
+                    }
+
+                    else {
+                        return;
+                    }
+       
 
                 });
 
