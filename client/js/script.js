@@ -94,7 +94,6 @@ $(document).ready(function() {
                     /*var html = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
 
                     html += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';*/
-                    */
                     
                     $.each(obj, function(index) { 
                         //alert(obj[index].zeit+obj[index].servermsg);
@@ -104,26 +103,8 @@ $(document).ready(function() {
 
                         $('#messages').append(html);
                         });
-						
-                    $.each(obj, function(key, value) {alert( "The key is '" + key + "' and the value is '" + value + "'" );
-                    });
-                    // TODO
-                    //$('#messages').append(data);
 
                 });
-                
-
-                /*webSocket.on('history', function(data) {
-
-                    var obj = jQuery.parseJSON(data);
-                
-                    var msg = '<li class="zeit">' + data + '</li>';
-
-                    
-                    $('#messages').append(msg);
-
-                });
-                */
 
                 webSocket.on('usersonline', function(data) {
 
