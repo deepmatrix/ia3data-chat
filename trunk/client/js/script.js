@@ -1,9 +1,10 @@
 $(document).ready(function() {
 
                 
-                
+
                 // Parameter
                 var serverurl = 'http://localhost:8000';
+
                 var clientname = 'Anon';
 
                 /** Lösche Message Box bei Browser-Aktualisierung */
@@ -18,6 +19,7 @@ $(document).ready(function() {
                 /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
                     
+                    //Text ausgeben
                     $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
 
                     $('#nachrichtenEingabe').keypress (function(e) {
@@ -46,24 +48,22 @@ $(document).ready(function() {
 
                 });
 
-                // $('#messages').lionbars();
-                // TODO: Lionbars kommt mit interaktivem Inhalt nicht klar!
+
 
                 /** Server sendet Nachricht an Client */
                 webSocket.on('message', function(data) {
 
+                    //"data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
 
+                    //Objektattribute formatieren und in Variable speichern
                     var html = '<span class="message">';
-
                     html += '<span class="zeit">' + obj.zeit + '</span>'+" ";
                     html += '<span class="username" style="color: ' + obj.farbe + '">' + obj.username + '</span>' + ": ";
                     html += obj.msg;
-
                     html += '</span>' +'<br />';
 
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
+                    //Variable ausgeben
                     $('#messages').append(html);
 
                 });
@@ -73,60 +73,62 @@ $(document).ready(function() {
                 /** Server sendet Servermessage an Client */
                 webSocket.on('servermessage', function(data) {
 
+                    //"data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
-
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
                     
+                    //Objektattribute formatieren und in Variable speichern
                     var msg = '<li class="zeit" style="color:#00AA00">' + obj.zeit + " ";
-
                     msg += '<span class="servermsg">' + obj.servermsg + '</span>' + '</li>';
 
+                    //Variable ausgeben
                     $('#messages').append(msg);
 
                 });
 
 
-
+                /** Server sendet History an Client */
                 webSocket.on('history', function(data) {
 
+                    //"data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
-
-                    // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
-                    // Wird dann JSON Datei sein!
                     
                     $.each(obj, function(index) { 
                         
+                        //Objektattribute formatieren und in Variable speichern
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
-
                         html += '<span class="servermsg">' + obj[index].servermsg + '</span>' + '</li>';
 
+                        //Variable ausgeben
                         $('#messages').append(html);
+
                     });
 
                 });
 
 
-
+                /** Server sendet Chatbenutzer an Client */
                 webSocket.on('usersonline', function(data) {
 
-                    //TODO: Anzahl der Chatuser vor auflistung
                     // Info ausgeben
                     $('#messages').append('<li>Im Chat befinden sich derzeit:</li>');
 
+                    //"data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
 
+                    //Objektattribute formatieren und in Variable speichern
                     var html = '<span class="usersonline">';
 
-                    for (var o in obj) {
+                        //Schleife zur Aneinanderreihung der User-Objekte
+                        for (var o in obj) {
 
-                        // Für jeden Datensatz eine Row
-                        html += obj[o] + ', ';
+                            // Für jeden Datensatz eine Row
+                            html += obj[o] + ', ';
 
-                    }
+                        }
 
                     html += '</span>';
-                
+                    
+                    //Variable ausgeben
                     $('#messages').append(html);
 
                 });
@@ -135,14 +137,16 @@ $(document).ready(function() {
 
                 /** Verbindung zum Server getrennt */
                 webSocket.on('disconnect', function() {
+
+                    //Text ausgeben
                     $('#messages').append('<li>Disconnected from the server.</li>');
+                
                 });
 
 
                 /** Event-Handler: Enter Button */
                 $('#nachrichtenEingabe').keypress (function(e) {
 
-                    
                     // Enter abfragen
                     if(e.which == 13 || e.keyCode == 13) {
                         
@@ -151,7 +155,9 @@ $(document).ready(function() {
         
                         // Textbox leeren
                         setTimeout(function() { // Fixt das doppelte Enter
+
                             $('#nachrichtenEingabe').val('');
+                        
                         }, 3);
         
                         // Nachricht versenden
@@ -162,12 +168,13 @@ $(document).ready(function() {
                 });
 
 
-
+                //nach Klick auf Button: Benutzername ändern
                 $('.userNameButton').bind('click', function() {
 
                     // Info ausgeben
                     $('#messages').append('<li>Geben Sie Ihren neuen Benutzernamen ein:</li>');
 
+                    /** Event-Handler: Enter Button */
                     $('#nachrichtenEingabe').keypress (function(e) {
 
                     
@@ -192,7 +199,7 @@ $(document).ready(function() {
                 });
 
 
-
+                //nach Klick auf Button: Angemeldete Benutzer ausgeben
                 $('.userListButton').bind('click', function() {
 
                     // Nachricht versenden
