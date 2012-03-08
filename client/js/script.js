@@ -100,12 +100,11 @@ $(document).ready(function() {
                         //alert(obj[index].zeit+obj[index].servermsg);
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
 
-<<<<<<< .mine
                         html += '<span class="servermsg">' + obj[index].servermsg + '</span>' + '</li>';
 
                         $('#messages').append(html);
                         });
-=======
+						
                     $.each(obj, function(key, value) {alert( "The key is '" + key + "' and the value is '" + value + "'" );
                     });
                     // TODO
@@ -119,7 +118,7 @@ $(document).ready(function() {
                     var obj = jQuery.parseJSON(data);
                 
                     var msg = '<li class="zeit">' + data + '</li>';
->>>>>>> .r97
+
                     
                     $('#messages').append(msg);
 
