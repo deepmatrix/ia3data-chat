@@ -1,9 +1,7 @@
 $(document).ready(function() {
 
                 
-
-                $('#messages').tinyscrollbar();
-
+                
                 // Parameter
                 var serverurl = 'http://localhost:8000';
                 var clientname = 'Anon';
