@@ -41,7 +41,7 @@ $(document).ready(function() {
                     html += '<span class="zeit">' + obj.zeit + '</span>'+" ";
                     html += '<span class="username" style="color: ' + obj.farbe + '">' + obj.username + '</span>' + ": ";
                     html += obj.msg;
-                    html += '</span>' +'<br />';
+                    html += '</span>' + '<br />';
 
                     //Variable ausgeben
                     $('#messages').append(html);
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
                         }
 
-                    html += '</span>';
+                    html += '<br />' + '</span>';
                     
                     //Variable ausgeben
                     $('#messages').append(html);
