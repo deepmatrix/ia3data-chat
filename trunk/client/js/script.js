@@ -2,6 +2,8 @@ $(document).ready(function() {
 
                 
 
+                $('#messages').tinyscrollbar();
+
                 // Parameter
                 var serverurl = 'http://localhost:8000';
                 var clientname = 'Anon';
@@ -23,26 +25,26 @@ $(document).ready(function() {
                     $('#nachrichtenEingabe').keypress (function(e) {
 
                     
-                    // Enter abfragen
-                    if(e.which == 13 || e.keyCode == 13) {
-                        
-                        // Nachricht auslesen
-                        var username = $('#nachrichtenEingabe').val();
-        
-                        // Textbox leeren
-                        setTimeout(function() { // Fixt das doppelte Enter
-                            $('#nachrichtenEingabe').val('');
-                        }, 3);
-        
-                        // Nachricht versenden
-                        webSocket.emit('username', username);
+                        // Enter abfragen
+                        if(e.which == 13 || e.keyCode == 13) {
+                            
+                            // Nachricht auslesen
+                            var username = $('#nachrichtenEingabe').val();
+            
+                            // Textbox leeren
+                            setTimeout(function() { // Fixt das doppelte Enter
+                                $('#nachrichtenEingabe').val('');
+                            }, 3);
+            
+                            // Nachricht versenden
+                            webSocket.emit('username', username);
 
-                    // Schalte Input und Buttons frei
-                    //$('button').attr('disabled', false);
+                        // Schalte Input und Buttons frei
+                        //$('button').attr('disabled', false);
 
-                    }
+                        }
 
-                });
+                    });
 
                 });
 
@@ -68,6 +70,8 @@ $(document).ready(function() {
 
                 });
 
+
+
                 /** Server sendet Servermessage an Client */
                 webSocket.on('servermessage', function(data) {
 
@@ -84,27 +88,27 @@ $(document).ready(function() {
 
                 });
 
+
+
                 webSocket.on('history', function(data) {
 
                     var obj = jQuery.parseJSON(data);
 
                     // TODO: Richtig formatieren, je nach "Typ" andere Aktion durchführen
                     // Wird dann JSON Datei sein!
-
-                    /*var html = '<span class="zeit" style="color:#AAAAAA">' + obj.zeit + " ";
-
-                    html += '<span class="servermsg">' + obj.servermsg + '</span>' + '</span>';*/
                     
                     $.each(obj, function(index) { 
-                        //alert(obj[index].zeit+obj[index].servermsg);
+                        
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
 
                         html += '<span class="servermsg">' + obj[index].servermsg + '</span>' + '</li>';
 
                         $('#messages').append(html);
-                        });
+                    });
 
                 });
+
+
 
                 webSocket.on('usersonline', function(data) {
 
@@ -127,13 +131,8 @@ $(document).ready(function() {
                 
                     $('#messages').append(html);
 
-                    /*
-                    // TODO
-                    var msg = '<span class="usersonline">' + data + '</span>';
-                    $('#messages').append(msg);
-                    */
-
                 });
+
 
 
                 /** Verbindung zum Server getrennt */
@@ -165,6 +164,7 @@ $(document).ready(function() {
                 });
 
 
+
                 $('.userNameButton').bind('click', function() {
 
                     // Info ausgeben
@@ -173,39 +173,23 @@ $(document).ready(function() {
                     $('#nachrichtenEingabe').keypress (function(e) {
 
                     
-                    // Enter abfragen
-                    if(e.which == 13 || e.keyCode == 13) {
-                        
-                        // Nachricht auslesen
-                        var username = $('#nachrichtenEingabe').val();
-        
-                        // Textbox leeren
-                        setTimeout(function() { // Fixt das doppelte Enter
-                            $('#nachrichtenEingabe').val('');
-                        }, 3);
-        
-                        // Nachricht versenden
-                        webSocket.emit('username', username);
-                    
-                    }
-
-                });
-
-                    /*
-                    // Nachricht auslesen
-                    var username = $('#messageText').val();
-
-                    if (username) {
-
-                        // Nachricht versenden
-                        webSocket.emit('username', username);
+                        // Enter abfragen
+                        if(e.which == 13 || e.keyCode == 13) {
+                            
+                            // Nachricht auslesen
+                            var username = $('#nachrichtenEingabe').val();
             
-                        // Textbox leeren
-                        $('#messageText').val('');
+                            // Textbox leeren
+                            setTimeout(function() { // Fixt das doppelte Enter
+                                $('#nachrichtenEingabe').val('');
+                            }, 3);
+            
+                            // Nachricht versenden
+                            webSocket.emit('username', username);
+                        
+                        }
 
-                    }
-                    */
-
+                    });
                     
                 });
 
