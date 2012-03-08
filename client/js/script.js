@@ -76,10 +76,14 @@ $(document).ready(function() {
                         
                         //Objektattribute formatieren und in Variable speichern
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
-                        html += '<span class="servermsg">' + obj[index].servermsg + '</span>' + '</li>';
+                        html += '<span class="servermsg">' + obj[index].servermsg +  '</span>'+ " ";
+                        html += '<span class="username">' + obj[index].username + '</span>'+ " ";
+                        html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
 
                         //Variable ausgeben
                         $('#messages').append(html);
+
+                        //$('#messages').append(data);
 
                     });
 
