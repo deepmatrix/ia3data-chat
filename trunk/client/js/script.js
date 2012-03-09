@@ -72,13 +72,26 @@ $(document).ready(function() {
                     //"data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
                     
-                    $.each(obj, function(index) { 
-                        
+                    $.each(obj, function(index) {
+
                         //Objektattribute formatieren und in Variable speichern
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
-                        html += '<span class="servermsg">' + obj[index].servermsg +  '</span>'+ " ";
-                        html += '<span class="username">' + obj[index].username + '</span>'+ " ";
-                        html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
+
+                        if (obj[index].servermsg) {
+
+                            html += '<span class="servermsg">' + obj[index].servermsg +  '</span>'+ " ";
+                            html += '<span class="username">' + obj[index].username + '</span>'+ " ";
+                            html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
+
+                        } else {
+
+                            html += '<span class="servermsg">' + obj[index].servermsg +  '</span>'+ " ";
+                            html += '<span class="username">' + obj[index].username + '</span>'+ " ";
+                            html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
+
+                        }
+
+                        
 
                         //Variable ausgeben
                         $('#messages').append(html);
