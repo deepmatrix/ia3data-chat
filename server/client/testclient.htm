@@ -95,19 +95,22 @@
 
             webSocket.on('usersonline', function(data) {
 
-                console.log(data);
-                var obj = jQuery.parseJSON(data);
+                var html = '<li class="usersonline">' + data + '</li>';
+                $('#messages').append(html);
 
-                var html = '<li class="usersonline">';
+                // console.log(data);
+                // var obj = jQuery.parseJSON(data);
 
-                for (var o in obj) {
+                // var html = '<li class="usersonline">';
 
-                    // Für jeden Datensatz eine Row
-                    html += obj[o] + ', ';
+                // for (var o in obj) {
 
-                }
+                //     // Für jeden Datensatz eine Row
+                //     html += obj[o] + ', ';
 
-                html += '</li>';
+                // }
+
+                // html += '</li>';
                 
                 $('#messages').append(html);
 
