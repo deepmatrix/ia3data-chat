@@ -90,8 +90,6 @@ $(document).ready(function() {
 
                         }
 
-                        
-
                         //Variable ausgeben
                         $('#messages').append(html);
 
