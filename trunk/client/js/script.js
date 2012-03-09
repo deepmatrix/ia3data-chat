@@ -10,7 +10,7 @@ $(document).ready(function() {
                 var chatstatus;
 
                 /** Lösche Message Box bei Browser-Aktualisierung */
-                $('#messages').text('');
+                $('#nachrichtenEingabe').text('');
 
                 /** Deaktiviere Eingabe bis Connection und Username gesetzt sind */
                 $('button').attr('disabled', true);
@@ -21,10 +21,12 @@ $(document).ready(function() {
                 /** Server Verbindung wird hergestellt */
                 webSocket.on('connect', function() {
 
+                    /** Lösche Message Box bei Browser-Aktualisierung */
+                    $('#messages').text('');
+
                     chatstatus = 0;
-            
-                    //Text ausgeben
-                    $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
+
+                    
 
                 });
 
@@ -83,7 +85,7 @@ $(document).ready(function() {
 
                         } else {
    
-                            html += '<span class="username">' + obj[index].username + '</span>'+ " ";
+                            html += '<span class="username">' + obj[index].username + '</span>'+ ": ";
                             html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
 
                         }
@@ -93,9 +95,10 @@ $(document).ready(function() {
                         //Variable ausgeben
                         $('#messages').append(html);
 
-                        //$('#messages').append(data);
-
                     });
+
+                    //Text ausgeben
+                    $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
 
                 });
 
