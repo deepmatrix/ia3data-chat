@@ -79,11 +79,10 @@ $(document).ready(function() {
 
                         if (obj[index].servermsg) {
 
-                            html += '<span class="zeit">' + obj[index].zeit + '</span>'+ " ";
                             html += '<span class="servermsg">' + obj[index].servermsg +  '</span>'+ " ";
 
                         } else {
-                            html += '<span class="zeit">' + obj[index].zeit + '</span>'+ " ";
+   
                             html += '<span class="username">' + obj[index].username + '</span>'+ " ";
                             html += '<span class="message">' + obj[index].msg + '</span>' + '</li>';
 
