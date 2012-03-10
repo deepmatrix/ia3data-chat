@@ -16,6 +16,7 @@
                 <button id="sendButton">Senden</button>
                 <button id="usernameButton">Namen &auml;ndern</button>
                 <button id="userButton">Users online</button>
+                <button id="test">Testlauf</button>
             </p>
         </div>
         <div>
@@ -98,22 +99,6 @@
                 var html = '<li class="usersonline">' + data + '</li>';
                 $('#messages').append(html);
 
-                // console.log(data);
-                // var obj = jQuery.parseJSON(data);
-
-                // var html = '<li class="usersonline">';
-
-                // for (var o in obj) {
-
-                //     // Für jeden Datensatz eine Row
-                //     html += obj[o] + ', ';
-
-                // }
-
-                // html += '</li>';
-                
-                $('#messages').append(html);
-
             });
 
 
@@ -164,6 +149,36 @@
 
                 // Nachricht versenden
                 webSocket.emit('usersonline', { my: 'data' });
+
+            });
+
+            /** Kleine Test-Suite die verschiedene Server Interaktionen testet */
+            $('#test').bind('click', function() {
+
+                // Verschiedene Aktionen testen:
+                var temp = clientname;
+
+                // Usernamen ändern:
+                setTimeout(function() {
+                    webSocket.emit('username', 'Testlauf'); 
+                }, 500);
+                
+                // Nachricht schreiben
+                setTimeout(function() {
+                    webSocket.send('AUTOMATISCHER TEST');
+                }, 1000);
+                
+                // Frage Users online an:
+                setTimeout(function() {
+                    webSocket.emit('usersonline');
+                }, 1500);
+
+                // Usernamen zurücksetzen
+                setTimeout(function() {
+                    webSocket.emit('username', temp);
+                }, 2000);
+
+                
 
             });
 
