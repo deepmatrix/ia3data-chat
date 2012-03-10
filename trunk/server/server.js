@@ -16,7 +16,7 @@ var port = 8000; // Server Port
 var historysize = 25; // Länge der History im Arbeitsspeicher (Array)
 var gastname = 'Gast'; // Nur in Ausnahmefällen nötig
 var DEBUG = false; // Schaltet DEBUG Modus an oder aus
-var FILELOG = true; // Schaltet das Schreiben der Logdateien ins Dateisystem an oder aus
+var FILELOG = false; // Schaltet das Schreiben der Logdateien ins Dateisystem an oder aus
 
 /**
  * Messagehistory Log
@@ -69,28 +69,30 @@ var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben d
 /**
  * Nimmt HTTP Anfragen entgegen und liefert den Client in HTML zurück
  * Socket.IO ist an den HTTP Server gebunden
+ * Orientiert sich an einem Beispiel von http://socket.io/#how-to-use
  */
 function httphandler(request, response) {
  
     console.log(getTime()  + ' LIEFERE CLIENT HTML.'.green);
     
     /** List die Client HTML ein und gibt sie bei jeder HTTP Anfrage aus */
-    fs.readFile(__dirname + '/client/testclient.htm', function(error, content) {
+    fs.readFile(__dirname + '/client/testclient.htm', function(error, data) {
 
         // TODO: Liefert aktuell nur Testclient aus!
         
         if (error) {
 
             response.writeHead(500);
-            response.end();
 
             console.log(getTime() + ' FEHLER BEIM SENDEN DES CLIENTS'.red);
             console.log(getTime() + error.toString());
 
+            return response.end('Error loading index.html');
+
         } else {
 
             response.writeHead(200, { 'Content-Type': 'text/html' });
-            response.end(content, 'utf-8');
+            response.end(data, 'utf-8');
         }
     });
      
@@ -138,7 +140,7 @@ if (FILELOG) {
     } catch(e) {
 
         console.log(getTime() + ' FEHLER BEIM ERSTELLEN DER LOGDATEI'.red);
-        console.log(getTime() + ' ' + e + ''.red);
+        console.log(getTime() + ' ' + e);
 
     }
 }
@@ -149,11 +151,6 @@ if (FILELOG) {
 
 /** Client verbindet sich mit Server */
 io.sockets.on('connection', function(client) {
-
-
-    // TODO: Bei kurzem Verbindungsabbruch wäre es besser,
-    // man könnte die verlorene Session einfach fortsetzen.
-    // Sonst muss man sich jedesmal neu einloggen.
 
     try {
 
@@ -175,19 +172,13 @@ io.sockets.on('connection', function(client) {
 
     } catch(e) {
 
-            // Schwerer Fehler, sollte nicht passieren! Zerstört Konsistenz des Chats
-            console.log(getTime() + ' SCHWERER FEHLER!'.red);
-            console.log(getTime() + ' FEHLER BEI CLIENT CONNECT'.red);
-            console.log(getTime() + ' ' + e + ''.red);
+            console.log(getTime() + ' FEHLER BEI CLIENT CONNECT!'.red);
+            console.log(getTime() + ' ' + e);
 
     }
 
 
     /** Client sendet seinen Usernamen */
-
-    //
-    //
-    //
     client.on('username', function(data) {
 
         try {
@@ -272,8 +263,8 @@ io.sockets.on('connection', function(client) {
 
         } catch(e) {
 
-            console.log(getTime() + ' FEHLER BEI CLIENT USERNAME'.red);
-            console.log(getTime() + ' ' + e + ''.red);
+            console.log(getTime() + ' FEHLER BEIM SETZEN DES CLIENT USERNAMENS!'.red);
+            console.log(getTime() + ' ' + e);
 
         }
         

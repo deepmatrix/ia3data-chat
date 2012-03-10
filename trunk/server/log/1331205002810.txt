@@ -1,2 +1,0 @@
-{"zeit":"12:10","servermsg":"Test joined the Chat"}
-{"mid":2,"zeit":"12:10","username":"Test","farbe":"#F80E27","msg":"asgd"}
