@@ -37,7 +37,6 @@ var usersonlineSet = {};
  * @type {Array}
  */
 var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4']; // TODO: Mehr Farben
-farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 /**
  * UserID. Jeder User hat eine eindeutige ID.
@@ -127,8 +126,8 @@ io.enable('browser client gzip');          // gzip the file
 // Die Dateien auf einem Apache Server ausliefen und die URLs entsprechend anpassen löst das Problem!
 io.set('origins', '*:*');
 
-
-console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
+/** Farbarray zufällig neuordnen */
+farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
 if (FILELOG) {
@@ -144,6 +143,8 @@ if (FILELOG) {
 
     }
 }
+
+console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
 
 ////////////////////////////////////////
 // Server Transport Logik (Socket.io) //
