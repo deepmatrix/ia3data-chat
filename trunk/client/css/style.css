@@ -226,7 +226,7 @@ mark {background-color: #90ffcf; color: #000; font-style: italic; font-weight: b
 
 a.userNameButton {
 	float:left;
-	background: url(../img/Buttons_Chat_chat_to_profile.png) no-repeat 0 0;
+	background: url(../img/userNameButton.png) no-repeat 0 0;
 	width: 30px;
 	height: 30px;
 	display: block;
@@ -238,7 +238,7 @@ a.userNameButton:hover { background-position: 0 -30px; }
 
 a.userListButton {
 	float:left;
-	background: url(../img/Buttons_Chat_chat_to_userlist.png) no-repeat 0 0;
+	background: url(../img/userListButton.png) no-repeat 0 0;
 	width: 30px;
 	height: 30px;
 	display: block;
