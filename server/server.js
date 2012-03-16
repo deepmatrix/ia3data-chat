@@ -97,7 +97,6 @@ function httphandler(request, response) {
      
 }
 
-
 //////////////////////////////////
 // Chatserver Initialisierung ////
 //////////////////////////////////
@@ -106,7 +105,7 @@ function httphandler(request, response) {
 
 /** Logging Level von Websockets reduzieren */
 io.set('log level', 1);
-if (DEBUG) { io.set('log level', 3);}
+if (DEBUG) {io.set('log level', 3);}
 
 /** Timeouts weniger aggressiv einstellen: */
 io.set('close timeout', 120);
@@ -131,6 +130,7 @@ farbArray = shuffle(farbArray); // Zufallsreihenfolge
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
 if (FILELOG) {
+
     try {
 
         var logfile = fs.createWriteStream(__dirname + '/log/' + new Date().getTime() + ".txt",
@@ -226,7 +226,8 @@ io.sockets.on('connection', function(client) {
                 };
 
                 /** Objekt in Message Log einfügen */
-                historyArray.add(obj);
+
+                addToHistory(historyArray, obj);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -251,7 +252,7 @@ io.sockets.on('connection', function(client) {
                 };
 
                 /** Objekt in Message Log einfügen */
-                historyArray.add(obj);
+                addToHistory(historyArray, obj);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -295,7 +296,7 @@ io.sockets.on('connection', function(client) {
                 console.log(getTime() + ' ' + client.username + ': ' + data);
 
                 /** Objekt in Message Log einfügen */
-                historyArray.add(obj);
+                addToHistory(historyArray, obj);
 
                 /** Objekt in JSON String konvertieren */
                 var json = JSON.stringify(obj);
@@ -367,7 +368,7 @@ io.sockets.on('connection', function(client) {
             };
 
             /** Objekt in Message Log einfügen */
-            historyArray.add(obj);
+            addToHistory(historyArray, obj);
 
             /** Objekt in JSON String konvertieren */
             json = JSON.stringify(obj);
@@ -439,11 +440,12 @@ function getTime() {
 }
 
 /**
- * Definiert neue Funktion auf dem historyArray um neue Logeinträge einzufügen.
- * Wenn die History größer ist als in var historysize angegeben kürze sie.
+ * Hilfsfunktion um in den historyArray neue Logeinträge einzufügen.
+ * Falls die History größer ist als in der Variable historysize angegeben kürze sie.
+ * @param  {array} array History Array
  * @param  {JSON} json JSON Objekt
  */
-historyArray.add = function(json) {
+function addToHistory(array, json) {
 
     // Fügt Eintrag in der erstellte Logdatei (Filesystem) an.
     // Hier werden keine Einträge gelöscht -> Archiv!
@@ -461,13 +463,14 @@ historyArray.add = function(json) {
     }
     
     // Füge JSON in Array ein
-    this.push(json);
+    array.push(json);
 
     // Falls die History die Historysize übersteigt, lösche ältesten Eintrag
     if (this.length > historysize) {
         this.shift(); // Performance?
     }
-};
+
+}
 
 /**
  * Hilfsfunktion die empfangene Daten verarbeitet:
