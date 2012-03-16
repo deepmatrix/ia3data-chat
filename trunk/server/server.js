@@ -238,11 +238,11 @@ io.sockets.on('connection', function(client) {
             } else {
 
                 // Neuer User
-                
+                                
                 client.username = data;
                 usersonlineSet[data] = true; // Neuen Usernamen in Set speichern
 
-                msg = client.username + ' joined the Chat';
+                msg = client.username + ' joined the Chat.';
                 
                 obj = {
                     zeit: getTime(),
