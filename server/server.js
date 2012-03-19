@@ -61,6 +61,9 @@ var io = require('socket.io').listen(http); // Transport Modul. "Sitzt" auf HTTP
 var colors = require('colors'); // Farben für die Konsole (https://github.com/marak/colors.js)
 var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
+var utilitys =require('./utilitys.js'); // Eigenes Utilitys Modul importieren
+var getTime = utilitys.getTime; // getTime Funktion in globalen Namespace importieren
+
 //////////////////////////////////
 // HTTPserver Initialisierung ////
 //////////////////////////////////
@@ -114,7 +117,6 @@ io.set('heartbeat interval', 30);
 
 /** Wahl und Reihenfolge der zu verwendenden Transport Protokolle */
 io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
-// Info: Opera verweigert den Dienst
 
 /** Kompression etc. */
 io.enable('browser client minification');  // send minified client
@@ -126,7 +128,7 @@ io.enable('browser client gzip');          // gzip the file
 io.set('origins', '*:*');
 
 /** Farbarray zufällig neuordnen */
-farbArray = shuffle(farbArray); // Zufallsreihenfolge
+farbArray = utilitys.shuffle(farbArray); // Zufallsreihenfolge
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
 if (FILELOG) {
@@ -160,7 +162,7 @@ io.sockets.on('connection', function(client) {
         if (DEBUG) { console.dir(client);} // Gibt alle Client Infos aus
 
         /** Client verbindet sich neu mit Server */
-        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + getIP(client));
+        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + utilitys.getIP(client));
         uid += 1;
         client.uid = uid; // Client die uid intern zuweisen
 
@@ -194,7 +196,7 @@ io.sockets.on('connection', function(client) {
             }
 
             /** Ruft Hilfsfunktion auf, die die empfangenen Daten "säubert" */
-            data = cleanInput(data);
+            data = utilitys.cleanInput(data);
 
             /**
              * Stellt sicher dass die Usernamen eindeutig sind
@@ -227,7 +229,7 @@ io.sockets.on('connection', function(client) {
 
                 /** Objekt in Message Log einfügen */
 
-                addToHistory(historyArray, obj);
+                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -252,7 +254,7 @@ io.sockets.on('connection', function(client) {
                 };
 
                 /** Objekt in Message Log einfügen */
-                addToHistory(historyArray, obj);
+                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -281,7 +283,7 @@ io.sockets.on('connection', function(client) {
             mid += 1; // MessageID inkrementieren
 
             /** Eingehende Message verarbeiten */
-            data = cleanInput(data);
+            data = utilitys.cleanInput(data);
 
             if (data) { // Nur wenn Daten gültig
 
@@ -296,7 +298,7 @@ io.sockets.on('connection', function(client) {
                 console.log(getTime() + ' ' + client.username + ': ' + data);
 
                 /** Objekt in Message Log einfügen */
-                addToHistory(historyArray, obj);
+                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 var json = JSON.stringify(obj);
@@ -358,7 +360,7 @@ io.sockets.on('connection', function(client) {
         
         try {
 
-            console.log(getTime() + ' CLIENT ABGEMELDET.'.green + getIP(client));
+            console.log(getTime() + ' CLIENT ABGEMELDET.'.green + utilitys.getIP(client));
             
             var msg = client.username + ' left the chat.';
         
@@ -368,7 +370,7 @@ io.sockets.on('connection', function(client) {
             };
 
             /** Objekt in Message Log einfügen */
-            addToHistory(historyArray, obj);
+            utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
 
             /** Objekt in JSON String konvertieren */
             json = JSON.stringify(obj);
@@ -412,107 +414,3 @@ io.sockets.on('connection', function(client) {
 
 
 });
-
-
-//////////////////////////////////
-// Hilfsfunktionen ///////////////
-//////////////////////////////////
-
-/**
- * Hilfsfunktion die Uhrzeit im HH:MM Format zurückgibt
- * @return {string}
- */
-function getTime() {
-    var currentTime = new Date();
-
-    /** Sorgt dafür dass die Zahl immer zweistellig ist */
-    function volle(zeit) {
-
-        if (zeit > 9) {
-            return zeit;
-        } else {
-            return "0" + zeit;
-        }
-
-    }
-
-    return '' + volle(currentTime.getHours()) + ':' + volle(currentTime.getMinutes());
-}
-
-/**
- * Hilfsfunktion um in den historyArray neue Logeinträge einzufügen.
- * Falls die History größer ist als in der Variable historysize angegeben kürze sie.
- * @param  {array} array History Array
- * @param  {JSON} json JSON Objekt
- */
-function addToHistory(array, json) {
-
-    // Fügt Eintrag in der erstellte Logdatei (Filesystem) an.
-    // Hier werden keine Einträge gelöscht -> Archiv!
-    if (FILELOG) {
-        try {
-
-            logfile.write(JSON.stringify(json) + '\n');
-
-        } catch(e) {
-
-            console.log(getTime() + ' FEHLER BEIM SCHREIBEN DER LOGDATEI'.red);
-            console.log(getTime() + ' ' + e);
-
-        }
-    }
-    
-    // Füge JSON in Array ein
-    array.push(json);
-
-    // Falls die History die Historysize übersteigt, lösche ältesten Eintrag
-    if (this.length > historysize) {
-        this.shift(); // Performance?
-    }
-
-}
-
-/**
- * Hilfsfunktion die empfangene Daten verarbeitet:
- * - Whitespace vorne und hinten entfernen
- * - HTML Tags entfernen (Sicherheitsfeature!)
- * @param  {string} data Vom Client empfangene Daten
- * @return {string}
- */
-function cleanInput(data) {
-    data = data.trim(); /** Whitespaces entfernen */
-    data = data.replace(/<(?:.|\n)*?>/gm, ''); /** HTML Tags entfernen, sonst Sicherheitslücke! */
-    return data;
-}
-
-/**
- * Array zufällig neuordnen
- * http://stackoverflow.com/questions/962802/is-it-correct-to-use-javascript-array-sort-method-for-shuffling
- * @param  {[]} array Array der neugemischt werden soll.
- * @return {[type]}
- */
-function shuffle(array) {
-    var tmp, current, top = array.length;
-
-    if(top) while(--top) {
-        current = Math.floor(Math.random() * (top + 1));
-        tmp = array[current];
-        array[current] = array[top];
-        array[top] = tmp;
-    }
-
-    return array;
-}
-
-/**
- * Hilfsfunktion die die IP Adresse und den Port des Clients ermittelt und formatiert
- * @param  {object} client Der spezifische Client
- * @return {string}
- */
-function getIP(client) {
-
-    var address = '[' + client.handshake.address.address + ':' + client.handshake.address.port + ']';
-
-    return address.yellow;
-
-}
