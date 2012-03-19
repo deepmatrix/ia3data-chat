@@ -61,8 +61,8 @@ var io = require('socket.io').listen(http); // Transport Modul. "Sitzt" auf HTTP
 var colors = require('colors'); // Farben für die Konsole (https://github.com/marak/colors.js)
 var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
-var utilitys =require('./utilitys.js'); // Eigenes Utilitys Modul importieren
-var getTime = utilitys.getTime; // getTime Funktion in globalen Namespace importieren
+var utilities =require('./utilities.js'); // Eigenes Utilitys Modul importieren
+var getTime = utilities.getTime; // getTime Funktion in globalen Namespace importieren
 
 //////////////////////////////////
 // HTTPserver Initialisierung ////
@@ -128,7 +128,7 @@ io.enable('browser client gzip');          // gzip the file
 io.set('origins', '*:*');
 
 /** Farbarray zufällig neuordnen */
-farbArray = utilitys.shuffle(farbArray); // Zufallsreihenfolge
+farbArray = utilities.shuffle(farbArray); // Zufallsreihenfolge
 
 /** Erstellt im Dateisystem eine Logdatei mit aktuellem Datestamp als Dateinamen */
 if (FILELOG) {
@@ -162,7 +162,7 @@ io.sockets.on('connection', function(client) {
         if (DEBUG) { console.dir(client);} // Gibt alle Client Infos aus
 
         /** Client verbindet sich neu mit Server */
-        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + utilitys.getIP(client));
+        console.log(getTime()  + ' NEUER CLIENT VERBUNDEN. '.green + utilities.getIP(client));
         uid += 1;
         client.uid = uid; // Client die uid intern zuweisen
 
@@ -196,7 +196,7 @@ io.sockets.on('connection', function(client) {
             }
 
             /** Ruft Hilfsfunktion auf, die die empfangenen Daten "säubert" */
-            data = utilitys.cleanInput(data);
+            data = utilities.cleanInput(data);
 
             /**
              * Stellt sicher dass die Usernamen eindeutig sind
@@ -229,7 +229,7 @@ io.sockets.on('connection', function(client) {
 
                 /** Objekt in Message Log einfügen */
 
-                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
+                utilities.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -254,7 +254,7 @@ io.sockets.on('connection', function(client) {
                 };
 
                 /** Objekt in Message Log einfügen */
-                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
+                utilities.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 json = JSON.stringify(obj);
@@ -283,7 +283,7 @@ io.sockets.on('connection', function(client) {
             mid += 1; // MessageID inkrementieren
 
             /** Eingehende Message verarbeiten */
-            data = utilitys.cleanInput(data);
+            data = utilities.cleanInput(data);
 
             if (data) { // Nur wenn Daten gültig
 
@@ -298,7 +298,7 @@ io.sockets.on('connection', function(client) {
                 console.log(getTime() + ' ' + client.username + ': ' + data);
 
                 /** Objekt in Message Log einfügen */
-                utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
+                utilities.addToHistory(historyArray, obj, FILELOG, historysize);
 
                 /** Objekt in JSON String konvertieren */
                 var json = JSON.stringify(obj);
@@ -360,7 +360,7 @@ io.sockets.on('connection', function(client) {
         
         try {
 
-            console.log(getTime() + ' CLIENT ABGEMELDET.'.green + utilitys.getIP(client));
+            console.log(getTime() + ' CLIENT ABGEMELDET.'.green + utilities.getIP(client));
             
             var msg = client.username + ' left the chat.';
         
@@ -370,7 +370,7 @@ io.sockets.on('connection', function(client) {
             };
 
             /** Objekt in Message Log einfügen */
-            utilitys.addToHistory(historyArray, obj, FILELOG, historysize);
+            utilities.addToHistory(historyArray, obj, FILELOG, historysize);
 
             /** Objekt in JSON String konvertieren */
             json = JSON.stringify(obj);
