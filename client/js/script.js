@@ -46,6 +46,7 @@ $(document).ready(function() {
                     //Variable ausgeben
                     $('#messages').append(html);
 
+
                 });
 
 
@@ -59,8 +60,7 @@ $(document).ready(function() {
                     //Objektattribute formatieren und in Variable speichern
                     var msg = '<li class="servermessage" style="color:#00AA00">';
                     msg += '<span class="zeit">' + obj.zeit + '</span>'+" ";
-                    msg += + obj.servermsg;
-                    msg += + '</li>';
+                    msg += obj.servermsg; + '</li>';
 
                     //Variable ausgeben
                     $('#messages').append(msg);
@@ -101,7 +101,7 @@ $(document).ready(function() {
                 });
 
 
-                /** Server sendet Chatbenutzer an Client */
+                /* Server sendet Chatbenutzer an Client */
                 webSocket.on('usersonline', function(data) {
 
                     // Info ausgeben
@@ -213,5 +213,46 @@ $(document).ready(function() {
        
 
                 });
+
+                var emoticons = (function () {
+                var emt = {
+                   ":D"  : '../img/grin.png',
+                   ":-D" : '../img/grin.png',       
+                   ":)"  : '../img/smile.png',
+                   ":-)" : '../img/smile.png',       
+                   ";)"  : '../img/wink.png',
+                   "';-)" : '../img/wink.png',
+
+                   ":("  : 'icon_e_sad.gif',
+                   ":-(" : 'icon_e_sad.gif',
+                   ":o"  : 'icon_e_surprised.gif',
+                   ":?"  : 'icon_e_confused.gif',
+                   "8-)" : 'icon_cool.gif',
+
+                   ":x"  : 'icon_mad.gif',
+                   ":P"  : 'icon_razz.gif'
+                };
+
+                var patterns = [];
+                for (smile in emt) {
+                    patterns.push([
+                        // escaping string special characters by hand
+                        // case-insensitive to match :p :d etc.
+                        new RegExp(smile.replace(/([\(\)\[\]\{\}\.\?\^\$\|\-])/g, "\\$1"), "gi"),
+                        '<img src="'+ emt[smile] + '" class="emoticons" />'
+                    ]); 
+                }
+
+                // this is the function that will be referenced by the variable emoticons
+                return function (text) {
+                    for(var i=0; i<patterns.length; i++) {
+                        text = text.replace(patterns[i][0], patterns[i][1]);
+                        //document.getElementById('messages').innerText
+                    }
+                    return text;
+                }
+
+            })();
+
 
 });
