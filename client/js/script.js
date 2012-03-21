@@ -2,20 +2,35 @@ $(document).ready(function() {
 
                 
 
-    // Parameter
+    /** 
+     * Parameter
+     */
     var serverurl = 'http://localhost:8000';
 
-    // Variable welche den chatstatus festlegt
+
+    /** 
+     * Variable welche den chatstatus festlegt
+     */
     var chatstatus;
 
-    // Lösche Message Box bei Browser-Aktualisierung
+
+    /** 
+     * Lösche Message Box bei Browser-Aktualisierung
+     */
     $('#nachrichtenEingabe').text('');
 
-    // Deaktiviere Eingabe bis Connection und Username gesetzt sind
+    
+    /** 
+     * Deaktiviere Eingabe bis Connection und Username gesetzt sind
+     */
     $('button').attr('disabled', true);
 
-    // Objekt dass Serverconnection herstellt und verwaltet
+
+    /** 
+     * Objekt dass Serverconnection herstellt und verwaltet
+     */
     var webSocket = io.connect(serverurl);
+
 
     /** 
      * Server Verbindung wird hergestellt
@@ -30,8 +45,9 @@ $(document).ready(function() {
     });
 
 
-
-    // Server sendet Nachricht an Client
+    /**
+     * Server sendet Nachricht an Client
+     */
     webSocket.on('message', function(data) {
 
         // "data"-objekt in "obj" Variable parsen
@@ -53,8 +69,9 @@ $(document).ready(function() {
     });
 
 
-
-    // Server sendet Servermessage an Client
+    /**
+     * Server sendet Servermessage an Client
+     */
     webSocket.on('servermessage', function(data) {
 
         // "data"-objekt in "obj" Variable parsen
@@ -71,7 +88,9 @@ $(document).ready(function() {
     });
 
 
-    // Server sendet History an Client
+    /**
+     * Server sendet History an Client
+     */ 
     webSocket.on('history', function(data) {
 
         // "data"-objekt in "obj" Variable parsen
@@ -104,7 +123,9 @@ $(document).ready(function() {
     });
 
 
-    // Server sendet Chatbenutzer an Client
+    /**
+     * Server sendet derzeitige Chatbenutzer an Client
+     */ 
     webSocket.on('usersonline', function(data) {
 
         // Info ausgeben
@@ -132,8 +153,9 @@ $(document).ready(function() {
     });
 
 
-
-    // Verbindung zum Server getrennt
+    /**
+     * Verbindung zum Server getrennt
+     */ 
     webSocket.on('disconnect', function() {
 
         // Text ausgeben
@@ -142,8 +164,9 @@ $(document).ready(function() {
     });
 
 
-
-    // nach Klick auf Button: Benutzername ändern
+    /**
+     * nach Klick auf Button: Benutzername ändern
+     */ 
     $('.userNameButton').bind('click', function() {
 
         chatstatus = 0;
@@ -154,8 +177,9 @@ $(document).ready(function() {
     });
 
 
-
-    // nach Klick auf Button: Angemeldete Benutzer ausgeben
+    /**
+     * nach Klick auf Button: Angemeldete Benutzer ausgeben
+     */ 
     $('.userListButton').bind('click', function() {
 
         // Nachricht versenden
@@ -165,7 +189,10 @@ $(document).ready(function() {
 
     });
 
-    // Event-Handler: Enter Button
+
+    /**
+     * Event-Handler: Enter Button
+     */ 
     $('#nachrichtenEingabe').keypress (function(e) {
 
         
@@ -217,19 +244,19 @@ $(document).ready(function() {
 
     });
 
+
+    /**
+     * Funktion zum Umwandeln von Smileys mittels Regex
+     */
     function smileyConvert(text) {
-      text = text.replace(/\:\)/g, '<img src="img/01.png" border="0">');
-      text = text.replace(/\:\(/g, '<img src="img/04.png" border="0">');
-      text = text.replace(/\:\D/g, '<img src="img/02.png" border="0">');
-      text = text.replace(/\:\X/g, '<img src="img/08.png" border="0">');
-      text = text.replace(/\X\D/g, '<img src="img/23.png" border="0">');
-      text = text.replace(/\;\)/g, '<img src="img/21.png" border="0">');
-      text = text.replace(/\:\'\(/g, '<img src="img/39.png" border="0">');
-      text = text.replace(/\:\O/g, '<img src="img/12.png" border="0">');
-      text = text.replace(/\:\P/g, '<img src="img/75.png" border="0">');
+
+        // Ersetze jeweilige Zeichenreihenfolge durch passendes Smileybild
+        text = text.replace(/\:\)/g, '<img src="img/01.png" border="0">');
+        text = text.replace(/\:\(/g, '<img src="img/04.png" border="0">');
+        text = text.replace(/\:\D/g, '<img src="img/02.png" border="0">');
+        text = text.replace(/\;\)/g, '<img src="img/21.png" border="0">');
       
-      text = text.replace(/\n/g, '<br>');
-      return text;
+        return text;
     }
 
                 
