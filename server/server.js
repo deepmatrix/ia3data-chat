@@ -36,7 +36,7 @@ var usersonlineSet = {};
  * Array mit Farben die Usern zufällig zugewiesen werden
  * @type {Array}
  */
-var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4']; // TODO: Mehr Farben
+var farbArray = ['#F80E27', '#F7991D', '#8AD749', '#0D9FD8', '#8469D4'];
 
 /**
  * UserID. Jeder User hat eine eindeutige ID.
@@ -62,7 +62,8 @@ var colors = require('colors'); // Farben für die Konsole (https://github.com/m
 var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
 var utilities =require('./utilities.js'); // Eigenes Utilitys Modul importieren
-var getTime = utilities.getTime; // getTime Funktion in globalen Namespace importieren
+var getTime = utilities.getTime; // getTime() Funktion in globalen Namespace importieren
+
 
 //////////////////////////////////
 // HTTPserver Initialisierung ////
@@ -99,6 +100,7 @@ function httphandler(request, response) {
     });
      
 }
+
 
 //////////////////////////////////
 // Chatserver Initialisierung ////
@@ -147,6 +149,7 @@ if (FILELOG) {
 }
 
 console.log(getTime()  + ' SERVER UP AND RUNNING.'.green);
+
 
 ////////////////////////////////////////
 // Server Transport Logik (Socket.io) //
@@ -389,6 +392,7 @@ io.sockets.on('connection', function(client) {
         }
 
     });
+
 
     ///////////////////////////////////
     // ZUKÜNFTIG MÖGLICHE FUNKTIONEN //

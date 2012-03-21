@@ -1,38 +1,36 @@
 $(document).ready(function() {
 
-                
-
-    /** 
+    /**
      * Parameter
      */
     var serverurl = 'http://localhost:8000';
 
 
-    /** 
+    /**
      * Variable welche den chatstatus festlegt
      */
     var chatstatus;
 
 
-    /** 
+    /**
      * Lösche Message Box bei Browser-Aktualisierung
      */
     $('#nachrichtenEingabe').text('');
 
     
-    /** 
+    /**
      * Deaktiviere Eingabe bis Connection und Username gesetzt sind
      */
     $('button').attr('disabled', true);
 
 
-    /** 
+    /**
      * Objekt dass Serverconnection herstellt und verwaltet
      */
     var webSocket = io.connect(serverurl);
 
 
-    /** 
+    /**
      * Server Verbindung wird hergestellt
      */
     webSocket.on('connect', function() {
@@ -80,7 +78,7 @@ $(document).ready(function() {
         // Objektattribute formatieren und in Variable speichern
         var msg = '<li class="servermessage" style="color:#00AA00">';
         msg += '<span class="zeit">' + obj.zeit + '</span>'+" ";
-        msg += obj.servermsg; + '</li>';
+        msg += obj.servermsg + '</li>';
 
         // Variable ausgeben
         $('#messages').append(msg);
@@ -90,7 +88,7 @@ $(document).ready(function() {
 
     /**
      * Server sendet History an Client
-     */ 
+     */
     webSocket.on('history', function(data) {
 
         // "data"-objekt in "obj" Variable parsen
@@ -125,7 +123,7 @@ $(document).ready(function() {
 
     /**
      * Server sendet derzeitige Chatbenutzer an Client
-     */ 
+     */
     webSocket.on('usersonline', function(data) {
 
         // Info ausgeben
@@ -155,7 +153,7 @@ $(document).ready(function() {
 
     /**
      * Verbindung zum Server getrennt
-     */ 
+     */
     webSocket.on('disconnect', function() {
 
         // Text ausgeben
@@ -166,7 +164,7 @@ $(document).ready(function() {
 
     /**
      * nach Klick auf Button: Benutzername ändern
-     */ 
+     */
     $('.userNameButton').bind('click', function() {
 
         chatstatus = 0;
@@ -179,7 +177,7 @@ $(document).ready(function() {
 
     /**
      * nach Klick auf Button: Angemeldete Benutzer ausgeben
-     */ 
+     */
     $('.userListButton').bind('click', function() {
 
         // Nachricht versenden
@@ -192,14 +190,14 @@ $(document).ready(function() {
 
     /**
      * Event-Handler: Enter Button
-     */ 
+     */
     $('#nachrichtenEingabe').keypress (function(e) {
 
         
         // Enter abfragen
-        if(e.which == 13 || e.keyCode == 13) {
+        if (e.which == 13 || e.keyCode == 13) {
 
-            if(chatstatus == 0) {
+            if (chatstatus === 0) {
                 
                 // Nachricht auslesen
                 var username = $('#nachrichtenEingabe').val();
