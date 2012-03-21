@@ -30,20 +30,20 @@ $(document).ready(function() {
 
 
 
-                /** Server sendet Nachricht an Client */
+                // Server sendet Nachricht an Client
                 webSocket.on('message', function(data) {
 
-                    //"data"-objekt in "obj" Variable parsen
+                    // "data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
 
-                    //Objektattribute formatieren und in Variable speichern
+                    // Objektattribute formatieren und in Variable speichern
                     var html = '<span class="message">';
                     html += '<span class="zeit">' + obj.zeit + '</span>'+" ";
                     html += '<span class="username" style="color: ' + obj.farbe + '">' + obj.username + '</span>' + ": ";
                     html += obj.msg;
                     html += '</span>' + '<br />';
 
-                    //Variable ausgeben
+                    // Variable ausgeben
                     $('#messages').append(html);
 
 
@@ -51,32 +51,32 @@ $(document).ready(function() {
 
 
 
-                /** Server sendet Servermessage an Client */
+                // Server sendet Servermessage an Client
                 webSocket.on('servermessage', function(data) {
 
-                    //"data"-objekt in "obj" Variable parsen
+                    // "data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
                     
-                    //Objektattribute formatieren und in Variable speichern
+                    // Objektattribute formatieren und in Variable speichern
                     var msg = '<li class="servermessage" style="color:#00AA00">';
                     msg += '<span class="zeit">' + obj.zeit + '</span>'+" ";
                     msg += obj.servermsg; + '</li>';
 
-                    //Variable ausgeben
+                    // Variable ausgeben
                     $('#messages').append(msg);
 
                 });
 
 
-                /** Server sendet History an Client */
+                // Server sendet History an Client
                 webSocket.on('history', function(data) {
 
-                    //"data"-objekt in "obj" Variable parsen
+                    // "data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
                     
                     $.each(obj, function(index) {
 
-                        //Objektattribute formatieren und in Variable speichern
+                        // Objektattribute formatieren und in Variable speichern
                         var html = '<li class="zeit" style="color:#AAAAAA">' + obj[index].zeit + " ";
 
                         if (obj[index].servermsg) {
@@ -90,30 +90,30 @@ $(document).ready(function() {
 
                         }
 
-                        //Variable ausgeben
+                        // Variable ausgeben
                         $('#messages').append(html);
 
                     });
 
-                    //Text ausgeben
+                    // Text ausgeben
                     $('#messages').append('<li>Geben Sie Ihren Benutzernamen ein:</li>');
 
                 });
 
 
-                /* Server sendet Chatbenutzer an Client */
+                // Server sendet Chatbenutzer an Client
                 webSocket.on('usersonline', function(data) {
 
                     // Info ausgeben
                     $('#messages').append('<li>Im Chat befinden sich derzeit:</li>');
 
-                    //"data"-objekt in "obj" Variable parsen
+                    // "data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
 
-                    //Objektattribute formatieren und in Variable speichern
+                    // Objektattribute formatieren und in Variable speichern
                     var html = '<span class="usersonline">';
 
-                        //Schleife zur Aneinanderreihung der User-Objekte
+                        // Schleife zur Aneinanderreihung der User-Objekte
                         for (var o in obj) {
 
                             // Für jeden Datensatz eine Row
@@ -123,24 +123,24 @@ $(document).ready(function() {
 
                     html += '<br />' + '</span>';
                     
-                    //Variable ausgeben
+                    // Variable ausgeben
                     $('#messages').append(html);
 
                 });
 
 
 
-                /** Verbindung zum Server getrennt */
+                // Verbindung zum Server getrennt
                 webSocket.on('disconnect', function() {
 
-                    //Text ausgeben
+                    // Text ausgeben
                     $('#messages').append('<li>Disconnected from the server.</li>');
                 
                 });
 
 
 
-                //nach Klick auf Button: Benutzername ändern
+                // nach Klick auf Button: Benutzername ändern
                 $('.userNameButton').bind('click', function() {
 
                     chatstatus = 0;
@@ -152,7 +152,7 @@ $(document).ready(function() {
 
 
 
-                //nach Klick auf Button: Angemeldete Benutzer ausgeben
+                // nach Klick auf Button: Angemeldete Benutzer ausgeben
                 $('.userListButton').bind('click', function() {
 
                     // Nachricht versenden
@@ -162,7 +162,7 @@ $(document).ready(function() {
 
                 });
 
-                /** Event-Handler: Enter Button */
+                // Event-Handler: Enter Button
                 $('#nachrichtenEingabe').keypress (function(e) {
 
                     
