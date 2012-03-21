@@ -5,21 +5,24 @@ $(document).ready(function() {
     // Parameter
     var serverurl = 'http://localhost:8000';
 
+    // Variable welche den chatstatus festlegt
     var chatstatus;
 
-    /** Lösche Message Box bei Browser-Aktualisierung */
+    // Lösche Message Box bei Browser-Aktualisierung
     $('#nachrichtenEingabe').text('');
 
-    /** Deaktiviere Eingabe bis Connection und Username gesetzt sind */
+    // Deaktiviere Eingabe bis Connection und Username gesetzt sind
     $('button').attr('disabled', true);
 
-    /** Objekt dass Serverconnection herstellt und verwaltet */
+    // Objekt dass Serverconnection herstellt und verwaltet
     var webSocket = io.connect(serverurl);
 
-    /** Server Verbindung wird hergestellt */
+    /** 
+     * Server Verbindung wird hergestellt
+     */
     webSocket.on('connect', function() {
 
-        /** Lösche Message Box bei Browser-Aktualisierung */
+        // Lösche Message Box bei Browser-Aktualisierung
         $('#messages').text('');
 
         chatstatus = 0;
@@ -215,11 +218,17 @@ $(document).ready(function() {
     });
 
     function smileyConvert(text) {
-      text = text.replace(/\:\)/g, '<img src="img/smile.png" border="0">');
-      text = text.replace(/\:\(/g, '<img src="img/sad.png" border="0">');
-      text = text.replace(/\:\D/g, '<img src="img/grin.png" border="0">');
+      text = text.replace(/\:\)/g, '<img src="img/01.png" border="0">');
+      text = text.replace(/\:\(/g, '<img src="img/04.png" border="0">');
+      text = text.replace(/\:\D/g, '<img src="img/02.png" border="0">');
+      text = text.replace(/\:\X/g, '<img src="img/08.png" border="0">');
+      text = text.replace(/\X\D/g, '<img src="img/23.png" border="0">');
+      text = text.replace(/\;\)/g, '<img src="img/21.png" border="0">');
+      text = text.replace(/\:\'\(/g, '<img src="img/39.png" border="0">');
+      text = text.replace(/\:\O/g, '<img src="img/12.png" border="0">');
+      text = text.replace(/\:\P/g, '<img src="img/75.png" border="0">');
       
-      text = text.replace("\n", '<br>');
+      text = text.replace(/\n/g, '<br>');
       return text;
     }
 
