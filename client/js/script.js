@@ -36,6 +36,8 @@ $(document).ready(function() {
                     // "data"-objekt in "obj" Variable parsen
                     var obj = jQuery.parseJSON(data);
 
+                    obj.msg = smileyConvert(obj.msg);
+
                     // Objektattribute formatieren und in Variable speichern
                     var html = '<span class="message">';
                     html += '<span class="zeit">' + obj.zeit + '</span>'+" ";
@@ -214,45 +216,14 @@ $(document).ready(function() {
 
                 });
 
-                var emoticons = (function () {
-                var emt = {
-                   ":D"  : '../img/grin.png',
-                   ":-D" : '../img/grin.png',       
-                   ":)"  : '../img/smile.png',
-                   ":-)" : '../img/smile.png',       
-                   ";)"  : '../img/wink.png',
-                   "';-)" : '../img/wink.png',
-
-                   ":("  : 'icon_e_sad.gif',
-                   ":-(" : 'icon_e_sad.gif',
-                   ":o"  : 'icon_e_surprised.gif',
-                   ":?"  : 'icon_e_confused.gif',
-                   "8-)" : 'icon_cool.gif',
-
-                   ":x"  : 'icon_mad.gif',
-                   ":P"  : 'icon_razz.gif'
-                };
-
-                var patterns = [];
-                for (smile in emt) {
-                    patterns.push([
-                        // escaping string special characters by hand
-                        // case-insensitive to match :p :d etc.
-                        new RegExp(smile.replace(/([\(\)\[\]\{\}\.\?\^\$\|\-])/g, "\\$1"), "gi"),
-                        '<img src="'+ emt[smile] + '" class="emoticons" />'
-                    ]); 
+                function smileyConvert(text) {
+                  text = text.replace(/\:\)/g, '<img src="../img/smile.png" border="0">');
+                  text = text.replace(/\:\(/g, '<img src="mad.gif" border="0">');
+                  text = text.replace(/\:\D/g, '<img src="biggrin.gif" border="0">');
+                  
+                  text = text.replace("\n", '<br>');
+                  return text;
                 }
 
-                // this is the function that will be referenced by the variable emoticons
-                return function (text) {
-                    for(var i=0; i<patterns.length; i++) {
-                        text = text.replace(patterns[i][0], patterns[i][1]);
-                        //document.getElementById('messages').innerText
-                    }
-                    return text;
-                }
-
-            })();
-
-
+                
 });
