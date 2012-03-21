@@ -217,9 +217,9 @@ $(document).ready(function() {
                 });
 
                 function smileyConvert(text) {
-                  text = text.replace(/\:\)/g, '<img src="../img/smile.png" border="0">');
-                  text = text.replace(/\:\(/g, '<img src="mad.gif" border="0">');
-                  text = text.replace(/\:\D/g, '<img src="biggrin.gif" border="0">');
+                  text = text.replace(/\:\)/g, '<img src="img/smile.png" border="0">');
+                  text = text.replace(/\:\(/g, '<img src="img/sad.png" border="0">');
+                  text = text.replace(/\:\D/g, '<img src="img/grin.png" border="0">');
                   
                   text = text.replace("\n", '<br>');
                   return text;
