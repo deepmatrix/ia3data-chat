@@ -76,7 +76,7 @@ $(document).ready(function() {
         var obj = jQuery.parseJSON(data);
         
         // Objektattribute formatieren und in Variable speichern
-        var msg = '<li class="servermessage" style="color:#00AA00">';
+        var msg = '<li class="servermessage" style="color:#505050">';
         msg += '<span class="zeit">' + obj.zeit + '</span>'+" ";
         msg += obj.servermsg + '</li>';
 
