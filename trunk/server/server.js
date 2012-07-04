@@ -61,7 +61,7 @@ var io = require('socket.io').listen(http); // Transport Modul. "Sitzt" auf HTTP
 var colors = require('colors'); // Farben für die Konsole (https://github.com/marak/colors.js)
 var fs = require('fs'); // Filesystem API zum senden des Clients und schreiben der Logdateien
 
-var utilities =require('./utilities.js'); // Eigenes Utilitys Modul importieren
+var utilities = require('./utilities.js'); // Eigenes Utilitys Modul importieren
 var getTime = utilities.getTime; // getTime() Funktion in globalen Namespace importieren
 
 
